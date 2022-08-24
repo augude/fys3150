@@ -1,2 +1,1 @@
-File1
-A new different line
+first line
