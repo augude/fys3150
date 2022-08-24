@@ -1,1 +1,1 @@
-# fys3150
+Course in Computational Physics at the University of Oslo
