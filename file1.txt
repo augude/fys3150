@@ -1,2 +1,6 @@
 
+<<<<<<< HEAD
 A new file added from main
+=======
+A new line added from experimental
+>>>>>>> experimental
