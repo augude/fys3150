@@ -22,7 +22,7 @@ void printToFile(int steps, int prec){
     std::ofstream ofile;
     ofile.open(filename);
 
-    for (int i = 0; i < steps; i++){
+    for (int i = 0; i <= steps; i++){
         ofile << std::setprecision(prec) << std::scientific << x[i] << " " << u[i] << "\n"  << std::endl; 
     }
 
