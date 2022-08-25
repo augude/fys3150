@@ -1,1 +1,3 @@
-This is a line. \nThis is version A
+This is a line. 
+This is version A
+
