@@ -1,3 +1,5 @@
 #include <iostream>
+#include <vector>
+#include <math.h>  
 
-void myFunc(int number);
+std::vector<double> expo(std::vector<double> x);

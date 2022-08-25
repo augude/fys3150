@@ -1,7 +1,10 @@
 #include "exercise1.hpp"
 
-void myFunc(int number){
-    int newNumber = number + 10;
-    std::cout << "The input number was: " << number << "\n"; 
-    std::cout << "The new number is: " << newNumber << "\n";
+std::vector<double> expo(std::vector<double> x){
+    std::vector<double> y;
+    for (int i = 0; i < x.size(); i++){
+        y.push_back(exp(x[i]));
+    }
+
+    return y;
 }
