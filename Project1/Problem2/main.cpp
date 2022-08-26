@@ -1,4 +1,4 @@
-#include "excactPlot.hpp"
+#include "exactPlot.hpp"
 
 int main(){
 
