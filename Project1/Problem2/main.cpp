@@ -1,11 +1,11 @@
 #include "exactPlot.hpp"
+#include "utils.hpp"
 
 int main(){
 
     int steps = 100;
-    int prec = 4;
 
-    printToFile(steps - 1, prec);
+    printToFile(steps - 1);
 
     return 0;
 }

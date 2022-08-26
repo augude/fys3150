@@ -6,8 +6,8 @@ sns.set_theme(font_scale = 2)
 
 data = np.loadtxt('exactPlot.txt')
 
-x = data[:, 0]
-u = data[:, 1]
+x = data[0, :]
+u = data[1, :]
 
 fig, axs = plt.subplots(nrows = 1, ncols = 1, figsize = (8, 8))
 axs.plot(x, u)

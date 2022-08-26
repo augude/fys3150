@@ -8,6 +8,6 @@
 #include <iomanip>
 #include <tuple>
 
-std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps, int prec);
+std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps);
 
-void printToFile(int steps, int prec);
+void printToFile(int steps);

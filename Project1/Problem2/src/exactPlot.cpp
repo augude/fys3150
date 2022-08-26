@@ -1,6 +1,7 @@
 #include "exactPlot.hpp"
+#include "utils.hpp"
 
-std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps, int prec){
+std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps){
     std::vector<double> x;
     std::vector<double> u;
 
@@ -15,16 +16,15 @@ std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps, i
     return {x, u};
 }
 
-void printToFile(int steps, int prec){
+void printToFile(int steps){
     
-    auto [x, u] = calculateExact(steps, prec);    
+    auto [x, u] = calculateExact(steps);    
     std::string filename = "exactPlot.txt";
     std::ofstream ofile;
     ofile.open(filename);
 
-    for (int i = 0; i <= steps; i++){
-        ofile << std::setprecision(prec) << std::scientific << x[i] << " " << u[i] << "\n"  << std::endl; 
-    }
+    ofile << scientificFormat(x) << std::endl;
+    ofile << scientificFormat(u) << std::endl;
 
     ofile.close();
 }
