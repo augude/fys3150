@@ -1,4 +1,4 @@
-#include "excactPlot.hpp"
+#include "exactPlot.hpp"
 
 std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps, int prec){
     std::vector<double> x;
