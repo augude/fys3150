@@ -5,7 +5,7 @@
 #include "utils.hpp"
 
 int main(){
-    int N = 1000; //number of steps 
+    int N = 10000; //number of steps 
     double h = 1.0/N; //step size
     double v0 = 0.0;  
     double vN = 0.0;
@@ -28,7 +28,7 @@ int main(){
 
     std::vector <double> v = tridiagAlgo(a, b, c, g);
 
-    std::string filename = "tridiagAlgo.txt";
+    std::string filename = "tridiagAlgo10000.txt";
     std::ofstream ofile;
     ofile.open(filename);
 
