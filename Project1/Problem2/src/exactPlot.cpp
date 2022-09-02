@@ -12,7 +12,7 @@ std::tuple<std::vector<double>, std::vector<double>> calculateExact(int steps){
         double value = 1 - (1 - exp(-10))*x.back() - exp(-10*x.back());
         u.push_back(value);
     }
-
+    
     return {x, u};
 }
 
