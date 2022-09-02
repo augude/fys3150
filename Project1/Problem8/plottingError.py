@@ -29,11 +29,10 @@ for index, filename in enumerate(files):
     axs.semilogy(x, error, label = f'$n = {10**(index + 1)}$')
 axs.set_xlabel(r'$x$')
 axs.set_ylabel(r'$\log_{10}(\Delta)$')
-#fig.tight_layout()
-axs.legend(loc = 'upper center', ncol = len(files)//2, fancybox = True
+lgd = axs.legend(loc = 'upper center', ncol = len(files)//2, fancybox = True
            , bbox_to_anchor = (0.5, 1.2))
 plt.show()
-plt.savefig('errors.pdf')
+fig.savefig('errors.pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 relErrorMax = np.zeros_like(files)
 fig, axs = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 10))
@@ -47,11 +46,10 @@ for index, filename in enumerate(files):
     axs.semilogy(x, relerror, label = f'$n = {10**(index + 1)}$')
 axs.set_xlabel(r'$x$')
 axs.set_ylabel(r'$\log_{10}(\epsilon)$')
-axs.legend(loc = 'upper center', ncol = len(files)//2, fancybox = True, 
+lgd = axs.legend(loc = 'upper center', ncol = len(files)//2, fancybox = True, 
            bbox_to_anchor = (0.5, 1.25))
-#fig.tight_layout()
+fig.savefig('relerrors.pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
 plt.show()
-plt.savefig('relerrors.pdf')
 
 
 print(relErrorMax)
