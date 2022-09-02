@@ -2,6 +2,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 import seaborn as sns 
+#%%
 
 sns.set_theme(font_scale = 2)
 
@@ -52,10 +53,16 @@ plt.show()
 plt.savefig('relerrors.pdf')
 # %%
 
-fig, axs = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 10))
+print(relErrorMax)
+#%%
+fig, axs = plt.subplots(nrows = 1, ncols = 2, figsize = (12, 10), sharey = True)
 steps = 10**(np.arange(1, 8))
-axs.semilogx(steps, relErrorMax)
-axs.set_xticks(steps)
-axs.set_xlabel(r'$n_{steps}$')
-axs.set_ylabel(r'$\epsilon$')
+axs[0].scatter(steps, relErrorMax)
+axs[1].semilogx(steps, relErrorMax)
+axs[0].set_xlabel(r'$n_{steps}$')
+axs[1].set_xlabel(r'$\log n_{steps}$')
+axs[0].set_ylabel(r'$\epsilon$')
+axs[0].set_yticks(np.linspace(10**(-6), 10**(-2), 10 ))
+plt.show()
 # %%
+
