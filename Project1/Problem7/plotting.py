@@ -26,28 +26,32 @@ x10000 = data10000[0, :]
 u10000 = data10000[1, :]
 
 
-fig, axs = plt.subplots(nrows = 2, ncols = 2, figsize = (8, 8))
+fig, axs = plt.subplots(nrows = 2, ncols = 2, figsize = (10, 10))
 axs[0, 0].plot(x10, u10)
 axs[0, 0].plot(xExact, uExact, linestyle = 'dashed')
+axs[0, 0].text(x = 0.0, y = 0.6, s = 'a')
 axs[0, 0].set_xlabel(r'$x$')
 axs[0, 0].set_ylabel(r'$v(x)$')
 
-axs[1, 0].plot(x100, u100)
-axs[1, 0].plot(xExact, uExact, linestyle = 'dashed')
-axs[1, 0].set_xlabel(r'$x$')
-axs[1, 0].set_ylabel(r'$v(x)$')
-
-axs[0, 1].plot(x1000, u1000)
+axs[0, 1].plot(x100, u100)
 axs[0, 1].plot(xExact, uExact, linestyle = 'dashed')
+axs[0, 1].text(x = 0.0, y = 0.6, s = 'b')
 axs[0, 1].set_xlabel(r'$x$')
 axs[0, 1].set_ylabel(r'$v(x)$')
 
+axs[1, 0].plot(x1000, u1000)
+axs[1, 0].plot(xExact, uExact, linestyle = 'dashed')
+axs[1, 0].text(x = 0.0, y = 0.6, s = 'c')
+axs[1, 0].set_xlabel(r'$x$')
+axs[1, 0].set_ylabel(r'$v(x)$')
+
 axs[1, 1].plot(x10000, u10000)
 axs[1, 1].plot(xExact, uExact, linestyle = 'dashed')
+axs[1, 1].text(x = 0.0, y = 0.6, s = 'd')
 axs[1, 1].set_xlabel(r'$x$')
 axs[1, 1].set_ylabel(r'$v(x)$')
 
 fig.tight_layout()
-#plt.savefig('tridiagAlgo.pdf')
+plt.savefig('tridiagAlgo.pdf')
 plt.show()
 # %%
