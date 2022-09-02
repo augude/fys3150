@@ -29,12 +29,12 @@ for index, filename in enumerate(files):
     axs.semilogy(x, error, label = f'$n = {10**(index + 1)}$')
 axs.set_xlabel(r'$x$')
 axs.set_ylabel(r'$\log_{10}(\Delta)$')
-fig.tight_layout()
+#fig.tight_layout()
 axs.legend(loc = 'upper center', ncol = len(files)//2, fancybox = True
            , bbox_to_anchor = (0.5, 1.2))
 plt.show()
 plt.savefig('errors.pdf')
-#%%
+
 relErrorMax = np.zeros_like(files)
 fig, axs = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 10))
 for index, filename in enumerate(files):
@@ -49,13 +49,14 @@ axs.set_xlabel(r'$x$')
 axs.set_ylabel(r'$\log_{10}(\epsilon)$')
 axs.legend(loc = 'upper center', ncol = len(files)//2, fancybox = True, 
            bbox_to_anchor = (0.5, 1.25))
+#fig.tight_layout()
 plt.show()
 plt.savefig('relerrors.pdf')
-# %%
+
 
 print(relErrorMax)
-#%%
-fig, axs = plt.subplots(nrows = 1, ncols = 2, figsize = (12, 10), sharey = True)
+
+"""fig, axs = plt.subplots(nrows = 1, ncols = 2, figsize = (12, 10), sharey = True)
 steps = 10**(np.arange(1, 8))
 axs[0].scatter(steps, relErrorMax)
 axs[1].semilogx(steps, relErrorMax)
@@ -64,5 +65,5 @@ axs[1].set_xlabel(r'$\log n_{steps}$')
 axs[0].set_ylabel(r'$\epsilon$')
 axs[0].set_yticks(np.linspace(10**(-6), 10**(-2), 10 ))
 plt.show()
-# %%
+"""# %%
 
