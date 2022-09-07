@@ -11,13 +11,14 @@ files = ['timings.txt']
 fig, axs = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 10))
 for index, filename in enumerate(files):
     data = np.loadtxt(filename) #loads the approximations from txt file
-    general = data
-    # special = data[1, :]
-    axs.semilogy(general)
-    # axs[1].plot(special)
+    Ns = [10**i for i in range(1, 7)]
+    general = data[0, :]
+    special = data[1, :]
+    axs.loglog(Ns, general)
+    axs.loglog(Ns, special)
 
 axs.set_xlabel(r'$N$')
 axs.set_ylabel('Time (log(s))')
-lgd = axs.set_title("General Algorithm")
+lgd = plt.legend(["General", "Special"])
 plt.show()
 fig.savefig('timings_comparison.pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
