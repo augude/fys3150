@@ -1,4 +1,4 @@
-#include "tridiagAlgo.hpp"
+#include "../include/tridiagAlgo.hpp"
 
 std::vector <double> tridiagAlgo(std::vector<double> a, std::vector<double> b, std::vector<double> c, std::vector<double> g){
     int N = b.size() + 1;
