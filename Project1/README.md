@@ -1,4 +1,9 @@
 ### Code and material for Project 1 in FYS3150. 
 The code is structured in folders for each problem.
 
-To run the code use the command 'make all'
+To build and run all the code use the command:
+
+'make all'
+
+in the terminal line. 
+This will call makefiles in each folders which in turn build and run the code for the respective problems. If you only want to run the code for a spesific problem, navigate to that folder and use the same command. 
