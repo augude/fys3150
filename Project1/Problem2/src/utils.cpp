@@ -15,3 +15,10 @@ std::string scientificFormat(const std::vector<double>&v, const int width, const
     return ss.str();
 }
 
+std::string scientificFormat(const std::vector<std::vector<double>>& v, const int width, const int prec){
+    std::stringstream ss;
+    for (std::vector<double> elem : v){
+        ss << scientificFormat(elem, width, prec) << std::endl;
+    }   
+    return ss.str();
+}

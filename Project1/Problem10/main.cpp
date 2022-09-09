@@ -10,32 +10,37 @@
 int main(){
     int N = 10;
 
-    std::vector<double> general;
-    std::vector<double> special;
+    std::vector<std::vector<double>> general;
+    std::vector<std::vector<double>> special;
+
 
     std::vector<int> ns = std::vector<int>{10, 100, 1000, 10000, 100000, 1000000};
-    double tg;
-    double ts;
+
+    std::vector<double> ts(N);
+    std::vector<double> tg(N);
+
     for (int n: ns){
-        tg = 0.0;
-        ts = 0.0;
         for (int i=0; i<N; i++){
-            tg += time_general(n);
-            ts += time_special(n);
+            tg.at(i) = time_general(n);
+            ts.at(i) = time_special(n);
         }
-        general.push_back(tg / N);
-        special.push_back(ts / N);
+        general.push_back(tg);
+        special.push_back(ts);
     }
 
-    std::string filename = "timings.txt";  
+    std::string filenameG = "timingsGeneral.txt";  
+    std::string filenameS = "timingsSpecial.txt";
 
-    std::ofstream ofile;
-    ofile.open(filename);
+    std::ofstream ofileS;
+    std::ofstream ofileG;
+    ofileG.open(filenameG);
+    ofileS.open(filenameS);
 
-    ofile << scientificFormat(general) << std::endl;
-    ofile << scientificFormat(special) << std::endl;
+    ofileG << scientificFormat(general) << std::endl;
+    ofileS << scientificFormat(special) << std::endl;
 
-    ofile.close();
+    ofileG.close();
+    ofileS.close();
 
     return 0;
 }
