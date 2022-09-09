@@ -8,7 +8,7 @@
 #include "include/timers.hpp"
 
 int main(){
-    int N = 10;
+    int N = 50;
 
     std::vector<std::vector<double>> general;
     std::vector<std::vector<double>> special;

@@ -7,12 +7,12 @@ sns.set_theme(font_scale = 2)
 
 general = np.loadtxt('timingsGeneral.txt')
 special = np.loadtxt('timingsSpecial.txt')
-n = len(general[0, :])
-generalMean = np.mean(general, axis = 1)
-generalSTD = np.std(general, axis = 1, ddof = 1)
+n = len(general[0, 1:])
+generalMean = np.mean(general[:, 1:], axis = 1)
+generalSTD = np.std(general[:, 1:], axis = 1, ddof = 1)
 
-specialMean = np.mean(special, axis = 1)
-specialSTD = np.std(special, axis = 1, ddof = 1)
+specialMean = np.mean(special[:, 1:], axis = 1)
+specialSTD = np.std(special[:, 1:], axis = 1, ddof = 1)
 
 fig, axs = plt.subplots(nrows = 1, ncols = 1, figsize = (10, 10))
 Ns = [10**i for i in range(1, 7)]
@@ -34,4 +34,18 @@ lgd = plt.legend(["General", "Special"])
 plt.show()
 fig.savefig('timings_comparison.pdf', bbox_extra_artists=(lgd,), bbox_inches='tight')
 
+# %%
+frac = generalMean/specialMean
+deltaFrac = frac*np.sqrt((generalSTD/generalMean)**2 + (specialSTD/specialMean)**2)
+
+print(frac)
+print(deltaFrac)
+# %%
+print(generalMean - generalSTD)
+# %%
+generalSTD
+# %%
+generalMean
+# %%
+general[0, :]
 # %%
