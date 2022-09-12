@@ -19,7 +19,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
     for(int j=1; j<matsize; j++){
         for (int i=0;i<j;i++){
             if(maxval<std::fabs(A(i,j))){
-                maxval=A(i,j);
+                maxval=std::fabs(A(i,j));
                 k=i;
                 l=j;
             }
