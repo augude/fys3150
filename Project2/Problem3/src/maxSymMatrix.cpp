@@ -9,6 +9,8 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
     int matsize=A.n_rows;
 
     //Consistency checks:
+    assert(A.is_symmetric());
+    assert(A.n_rows!=1);
 
     //setting initial comparison value
     double maxval=A(0,1); k=0;l=1;
