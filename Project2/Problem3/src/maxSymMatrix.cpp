@@ -13,7 +13,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
     assert(A.n_rows!=1);
 
     //setting initial comparison value
-    double maxval=A(0,1); k=0;l=1;
+    double maxval=std::fabs(A(0,1)); k=0;l=1;
 
     //Looping through the upper triagonal of the matrix
     for(int j=1; j<matsize; j++){
