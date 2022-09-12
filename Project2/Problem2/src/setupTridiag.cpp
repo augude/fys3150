@@ -1,4 +1,6 @@
 #include "../include/setupTridiag.hpp"
+#include "../../include/utils.hpp"
+
 std::map <double, arma::vec> evalsArma(int N){
     /*
         takes in the dimension of the matrix
@@ -74,11 +76,10 @@ void testSetup(int N){
         s += (armaEvals(i) - exactEvals(i));
         s += sum(armaEvecs.col(i) - exactEvecs.col(i));
     }
-    if (s < 1e-6){
-        std::cout << "The test passed. The eigenvectors and eigenvalues are similar" << std::endl;
+    if (abs(s) < 1e-6){
+        std::cout << "The test passed. The difference between the analytical and the numerical values is: " << scientificFormat(abs(s)) << std::endl;
     }
     else{
-        std::cout << "The test failed. The eigenvectors and eigenvalues are not similar" << std::endl;
+        std::cout << "The test failed. The difference between the analytical and the numerical values is: " << scientificFormat(abs(s)) << std::endl;
     }
-
 }
