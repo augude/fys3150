@@ -32,3 +32,17 @@ std::string scientificFormat(const std::vector<std::vector<double>>& v, const in
     return ss.str();
 }
 
+void setupTridiag(arma::mat & A){
+
+    int N = A.n_cols;
+
+    double h = (1.0)/(N + 1);
+    
+    A(0, 0) = 2.0/(h*h);
+
+    for (int i = 1; i < N; i ++){
+            A(i, i) = 2.0/(h*h);
+            A(i - 1, i) = -1.0/(h*h); 
+            A(i, i - 1) = -1.0/(h*h);
+    }
+}

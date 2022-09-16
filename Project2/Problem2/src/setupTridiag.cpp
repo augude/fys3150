@@ -1,22 +1,10 @@
 #include "../include/setupTridiag.hpp"
 #include "../../include/utils.hpp"
 
-std::map <double, arma::vec> evalsArma(int N){
+std::map <double, arma::vec> evalsArma(const arma::mat & A){
     /*
-        takes in the dimension of the matrix
-        the dimension of A is two less than the number of points in v
-        and one less than the number of steps
+        takes in a reference to the matrix. 
     */
-    double h = 1.0/(N + 1); //h is defined by the number of steps, not the matrix dim
-    
-    arma::mat A = arma::mat(N, N).fill(0.0);
-    A(0, 0) = 2.0/(h*h);
-
-    for (int i = 1; i < N; i ++){
-            A(i, i) = 2.0/(h*h);
-            A(i - 1, i) = -1.0/(h*h); 
-            A(i, i - 1) = -1.0/(h*h);
-    }
     arma::vec eigval;
     arma::mat eigvec;
     eig_sym(eigval, eigvec, A);
@@ -30,7 +18,8 @@ std::map <double, arma::vec> evalsArma(int N){
     return evalsEvec;
 }
 
-std::map <double, arma::vec> evalsExact(int N){
+std::map <double, arma::vec> evalsExact(const arma::mat & A){
+    int N = A.n_cols;
     double h = 1.0/(N + 1); //h is defined by the number of steps, not the matrix dim
     std::map <double, arma::vec> evalsEvec;
 
@@ -50,31 +39,30 @@ std::map <double, arma::vec> evalsExact(int N){
     return evalsEvec;
 }
 
-void testSetup(int N){
-    std::map <double, arma::vec> armaEvalsEvec = evalsArma(N);
-    std::map <double, arma::vec> exactEvalsEvec = evalsExact(N);
-    arma::vec armaEvals = arma::vec(N);
-    arma::mat armaEvecs = arma::mat(N, N).fill(0.0);
+void testSetup(std::map <double, arma::vec> exact, std::map <double, arma::vec> approx){
+    int N = exact.size();
+    arma::vec approxEvals = arma::vec(N);
+    arma::mat approxEvecs = arma::mat(N, N).fill(0.0);
     arma::vec exactEvals = arma::vec(N);
     arma::mat exactEvecs = arma::mat(N, N).fill(0.0);
 
-    for(auto it = exactEvalsEvec.cbegin(); it != exactEvalsEvec.cend(); ++it){
+    for(auto it = exact.cbegin(); it != exact.cend(); ++it){
         int i = 0;
         exactEvals(i) = it -> first;
         exactEvecs.col(i) = it -> second;
         i += 1;
     }
 
-    for(auto it = armaEvalsEvec.cbegin(); it != armaEvalsEvec.cend(); ++it){
+    for(auto it = approx.cbegin(); it != approx.cend(); ++it){
         int i = 0;
-        armaEvals(i) = it -> first;
-        armaEvecs.col(i) = it -> second;
+        approxEvals(i) = it -> first;
+        approxEvecs.col(i) = it -> second;
         i += 1;
     }
     double s = 0.0;
     for (int i = 0; i < N; i++){
-        s += (armaEvals(i) - exactEvals(i));
-        s += sum(armaEvecs.col(i) - exactEvecs.col(i));
+        s += (approxEvals(i) - exactEvals(i));
+        s += sum(approxEvecs.col(i) - exactEvecs.col(i));
     }
     if (abs(s) < 1e-6){
         std::cout << "The test passed. The difference between the analytical and the numerical values is: " << scientificFormat(abs(s)) << std::endl;

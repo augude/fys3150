@@ -12,3 +12,5 @@ std::string scientificFormat(const std::vector<double>& v, const int width = 20,
 std::string scientificFormat(const arma::vec v, const int width = 20, const int prec = 10);
 
 std::string scientificFormat(const std::vector<std::vector<double>>& v, const int width = 20, const int prec = 10);
+
+void setupTridiag(arma::mat & A);
