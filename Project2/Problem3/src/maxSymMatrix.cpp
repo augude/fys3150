@@ -1,6 +1,6 @@
-#include "../include/setupTridiag.hpp"
+#include "../include/maxSymMatrix.hpp"
 
-double max_offdiag_symmetric(const arma::mat& A, int& row, int &col){
+double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
     /*
     Loops through the upper triagonal of the symmetric matrix to find
     the maximum value.
@@ -9,15 +9,19 @@ double max_offdiag_symmetric(const arma::mat& A, int& row, int &col){
     int matsize=A.n_rows;
 
     //Consistency checks:
+    assert(A.is_symmetric());
+    assert(A.n_rows!=1);
 
     //setting initial comparison value
-    double maxval=A(0,1); row=0;col=1;
-    
+    double maxval=std::fabs(A(0,1)); k=0;l=1;
 
-    for(int i =0; i<matsize-1; i++){
-        for (int j=i+1;j<matsize;j++){
-            if(maxval<A(i,j)){
-                maxval=A(i,j); row=i;col=j;
+    //Looping through the upper triagonal of the matrix
+    for(int j=1; j<matsize; j++){
+        for (int i=0;i<j;i++){
+            if(maxval<std::fabs(A(i,j))){
+                maxval=std::fabs(A(i,j));
+                k=i;
+                l=j;
             }
         }
     }
