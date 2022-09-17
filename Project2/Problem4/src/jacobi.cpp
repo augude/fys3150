@@ -14,10 +14,14 @@ void jacobiRotate(arma::mat& A, arma::mat& R, int k, int l, double eps){
 
     //compute tridigonometric values
     double t = (1.0/(tau + sqrt(1 + tau*tau))) * (tau > 0) + (-1.0/(-tau + sqrt(1 + tau*tau))) * (tau <= 0);
-
     double c = 1.0/sqrt(1 + t*t);
     double s = c*t;
 
+    //check for nan-values
+    assert(isfinite(t));
+    assert(isfinite(s));
+    assert(isfinite(c));
+    
     A(k, k) = A_kk*c*c - 2*A_kl*c*s + A_ll*s*s;
     A(l, l) = A_ll*c*c + 2*A_kl*c*s + A_kk*s*s;
     A(k, l) = 0;

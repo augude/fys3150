@@ -15,6 +15,14 @@ std::string scientificFormat(const std::vector<double>&v, const int width, const
     return ss.str();
 }
 
+std::string scientificFormat(const std::vector<int>& v, const int width){
+    std::stringstream ss;
+    for (int elem : v){
+        ss << std::setw(width) << std::scientific << elem;
+    }   
+    return ss.str();
+}
+
 std::string scientificFormat(const arma::vec v, const int width, const int prec){
     std::stringstream ss;
     for (double elem : v){
