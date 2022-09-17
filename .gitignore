@@ -37,6 +37,9 @@
 *.out
 *.app
 
+#tex-files
+.tex
+
 #txt-files
 *.txt
 # End of https://www.toptal.com/developers/gitignore/api/c++
