@@ -7,20 +7,18 @@ void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l, double eps)
     double s;
     
     //Concerns all non-zero offdiagonal elements
-    if (abs(A(k, l)) > eps){
+    if (abs(A(k, l)) > eps && abs(A(l, k)) > eps){
         double t;
-        double the;
+        double tau;
 
         //Choosing theta such that all offdiagonal elements become zero
-        the = (A(l, l) - A(k, k))/(2*A(k, l));
+        tau = (A(l, l) - A(k, k))/(2*A(k, l));
 
         //Must choose t to be the smaller of the two roots
-        //Smaller root corresponds to a rotation angle smaller than pi/4
-        //Using the form of the quadratic formular with the discriminant in the denominator, the smaller root can be written as
-        if (the > 0){
-            t = 1.0/(the + sqrt(the*the + 1));
+        if (tau > 0){
+            t = 1.0/(tau + sqrt(tau*tau + 1));
         } else {
-            t = -1.0/(the + sqrt(the*the + 1));
+            t = -1.0/(-tau + sqrt(tau*tau + 1));
         }
             
 
@@ -71,7 +69,7 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigval,
                         arma::mat& eigvec, const int maxiter, int& iterations, bool& converged)
 {
     //Initialise S as A and R as identity matrix
-    int N = A.n_rows;
+    long long N = A.n_rows;
     arma::mat S = A;
     arma::mat R(N, N, arma::fill::eye);
     
@@ -83,14 +81,17 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigval,
     //All max off-diagonal values become zero
     //Max number of iterations is reached
     while (maxoffdiag > eps && iterations < maxiter){
-        maxoffdiag = max_offdiag_symmetric(S, k, l);
         jacobi_rotate(S, R, k, l, eps);
+        maxoffdiag = max_offdiag_symmetric(S, k, l);
         iterations++;
         }
     
     //Check for convergence
     if (maxoffdiag < eps){
         converged = true;
+        std:: cout << "The rotation algorithm converged." << std::endl;
+    } else {
+        std::cout << "The rotation algorithm did not converge." << std::endl;
     }
     
     //Write out iterations
@@ -107,9 +108,12 @@ void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigval,
     //Sort the indicies
     arma::uvec indicies = arma::sort_index(eigval);
     
-    std::cout << eigval << std::endl;
-    std::cout << eigvec << std::endl;
-    
+    for (auto i = N - 1; 0 < i; i--) {
+        auto new_idx = indicies[i];
+        while (new_idx > i) new_idx = indicies[new_idx];
+        eigval.swap_rows(i, new_idx);
+        eigvec.swap_cols(i, new_idx);
+    }
     
     return;
 }
