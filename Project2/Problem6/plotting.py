@@ -24,7 +24,7 @@ for N in [9, 99]:
         u = np.concatenate((np.zeros(1), vec[N + i, :], np.zeros(1))) #exact
         axs.plot(x, v, color = 'blue')
         axs.plot(x, u, color = 'red', linestyle = '--')
-    axs.set_xlabel(r'x [1/L]')
+    axs.set_xlabel(r'x [L]')
     axs.set_ylabel(r'v(x)')
     plt.legend(['Approximation', 'Exact'])
     tikzplotlib.clean_figure()
