@@ -38,7 +38,7 @@
 *.app
 
 #tex-files
-.tex
+*.tex
 
 #txt-files
 *.txt
