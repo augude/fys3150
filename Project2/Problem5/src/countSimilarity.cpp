@@ -10,16 +10,16 @@ std::vector<int> countSimilarities(const std::vector<int> listOfN, double eps){
    bool converged = false;
    std::vector<int> listOfIter;
    for (int N : listOfN){
-        //arma::mat A = arma::mat(N, N); 
+        arma::mat A = arma::mat(N, N); 
         arma::vec eigenvalues = arma::vec(N);
         arma::mat eigenvectors = arma::mat(N, N).fill(0.0);
         int maxiter = 1e5; //expects convergence in O(N^4)
         int iterations = 0;
-        //setupTridiag(A);
+        setupTridiag(A);
         // Generate random N*N matrix
-        arma::mat A = arma::mat(N, N).randn();  
+        //arma::mat A = arma::mat(N, N).randn();  
         // Symmetrize the matrix by reflecting the upper triangle to lower triangle
-        A = arma::symmatu(A); 
+        //A = arma::symmatu(A); 
         jacobiEigensolver(A, eps, eigenvalues, eigenvectors, maxiter, iterations, converged);
         listOfIter.push_back(iterations);
    }

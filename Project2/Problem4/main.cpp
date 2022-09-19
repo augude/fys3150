@@ -32,5 +32,11 @@ int main(){
 
     eig_sym(eigval, eigvec, A);
 
+    std::cout << scientificFormat(eigenvalues) << std::endl;
+    for (auto it = exact.cbegin(); it != exact.cend(); it++){
+        std::cout << scientificFormat(it -> first) << std::endl;
+    }
+
+
     return 0;
 }

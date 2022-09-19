@@ -13,7 +13,13 @@ void jacobiRotate(arma::mat& A, arma::mat& R, int k, int l, double eps){
     double tau = (A_ll - A_kk)/(2.0*A_kl);
 
     //compute tridigonometric values
-    double t = (1.0/(tau + sqrt(1 + tau*tau))) * (tau > 0) + (-1.0/(-tau + sqrt(1 + tau*tau))) * (tau <= 0);
+    double t;
+    if (tau <= 0){
+        t = -1.0/(-tau + sqrt(1 + tau*tau));
+    }
+    else{
+         t = 1.0/(tau + sqrt(1 + tau*tau));
+    }
     double c = 1.0/sqrt(1 + t*t);
     double s = c*t;
 

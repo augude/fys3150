@@ -9,7 +9,7 @@ int main(){
     for (int N : Ns){
         arma::mat A = arma::mat(N, N);
         setupTridiag(A);
-        double eps = 1e-3;
+        double eps = 1e-8;
         arma::mat eigenvectors = arma::mat(N, N);
         arma::vec eigenvalues = arma::vec(N);
         int maxiter = 1e5;

@@ -6,7 +6,7 @@ import seaborn as sns
 
 sns.set_theme()
 
-data = np.loadtxt('countSimilarities.txt')
+data = np.loadtxt('countSimilaritiesDense.txt')
 
 listOfN = data[0, :]
 listOfIter = data[1, :]
@@ -18,7 +18,7 @@ axs.set_xlabel(r'Size of matrix')
 axs.set_ylabel(r'Number of iterations')
 tikzplotlib.clean_figure()
 tikzplotlib.save(
-            f"convergence.tex",
+            f"convergenceDense.tex",
             extra_axis_parameters=[
                 "title style={align=center}",
                 "xmajorticks=true",
