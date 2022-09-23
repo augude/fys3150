@@ -12,7 +12,7 @@ def fit(x, a, b, c, d):
 
 
 files = np.array(['countSimilarities.txt', 'countSimilaritiesDense.txt'])
-fig, axs = plt.subplots(ncols = 2, nrows = 1, figsize = (10, 10), sharey = True)
+fig, axs = plt.subplots(ncols = 1, nrows = 2, figsize = (10, 10), sharex = True)
 
 for index, file in enumerate(files):
     data = np.loadtxt(file)
@@ -23,16 +23,16 @@ for index, file in enumerate(files):
     print(params)
     fitted = fit(listOfN, params[0], params[1], params[2], params[3])
     
-    axs[index].plot(listOfN, listOfIter)
-    axs[index].plot(listOfN, fitted, linestyle = '--')
-    axs[index].set_xlabel(r'N')
-    axs[index].legend(['I(N)', r'$I_{fit} = \mathcal{O}(N^2)$'])
-axs[0].set_ylabel(r'I(N)')
-axs[0].text(x = 0, y = 16500, s = 'Tridiagonal matrix')
-axs[1].text(x = 0, y = 16500, s = 'Dense matrix')
+    axs[index].plot(listOfN, listOfIter, color = 'blue', linewidth = 4.0)
+    axs[index].plot(listOfN, fitted, linestyle = '--', color = 'red')
+    axs[index].set_ylabel(r'I(N)')
+    axs[index].legend(['I(N)', r'$I_{fit}(N) = \mathcal{O}(N^2)$'])
+axs[0].set_xlabel(r'N')
+axs[0].text(x = 80, y = 20, s = 'Tridiagonal matrix')
+axs[1].text(x = 80, y = 20, s = 'Dense matrix')
 tikzplotlib.clean_figure()
 tikzplotlib.save(
-    f"{file[:-4]}.tex",
+    f"convergence.tex",
     extra_axis_parameters=[
         "title style={align=center}",
         "xmajorticks=true",
