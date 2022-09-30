@@ -44,3 +44,8 @@ plt.savefig('PenningTrapSetup.pdf')
 plt.show()
 
 # %%
+
+testSetup = np.loadtxt('testOneParticleFE.txt')
+
+print(testSetup[:, 3])
+# %%

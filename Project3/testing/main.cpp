@@ -1,11 +1,12 @@
 #include "../include/PenningTrap.hpp"
+#include "../include/Particle.hpp"
 #include "../../Project2/include/utils.hpp"
 #include "include/tests.hpp"
-#include <fstream>
-#include <string>
 
 
 int main(){
-    testPenningSetup();
+    //testPenningSetup();
+
+    testOneParticleFE();
     return 0;
 }
