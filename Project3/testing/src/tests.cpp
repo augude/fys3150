@@ -1,10 +1,10 @@
-#include "include/PenningTrap.hpp"
-#include "../Project2/include/utils.hpp"
+#include "../../include/PenningTrap.hpp"
+#include "../../../Project2/include/utils.hpp"
 #include <fstream>
 #include <string>
 
 
-int main(){
+void testPenningSetup(){
 
     double B0 = 9.51e1;
     double V0 = 9.65e8;
@@ -33,5 +33,4 @@ int main(){
         }
     }
     ofile.close();
-    return 0;
 }
