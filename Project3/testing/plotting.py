@@ -43,46 +43,60 @@ plt.savefig('PenningTrapSetup.pdf')
 plt.show()
 
 # %%
-testSetup = np.loadtxt('testOneParticleFE.txt')
-t = testSetup[:, 0]
-pos = testSetup[:, 1:4]
-vel = testSetup[:, 4:]
+files = ['testOneParticleFE.txt', 'testOneParticleRK4.txt']
 
-q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
-wz = np.sqrt(2*q*V0/(m*d**2)) 
-w0 = q*B0/m
+for filename in files:
+    test = np.loadtxt(filename)
+    t = test[:, 0]
+    pos = test[:, 1:4]
+    vel = test[:, 4:]
 
-v0 = vel[0, 2]; x0 = pos[0, 0]; z0 = pos[0, 2]
+    q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
+    wz = np.sqrt(2*q*V0/(m*d**2)) 
+    w0 = q*B0/m
 
-wp = (w0 + np.sqrt(w0**2 - 2*wz**2))/2
-wm = (w0 - np.sqrt(w0**2 - 2*wz**2))/2
+    v0 = vel[0, 2]; x0 = pos[0, 0]; z0 = pos[0, 2]
 
-Ap = (v0 + wm*x0)/(wm - wp)
-Am = -(v0 + wp*x0)/(wm - wp)
+    wp = (w0 + np.sqrt(w0**2 - 2*wz**2))/2
+    wm = (w0 - np.sqrt(w0**2 - 2*wz**2))/2
 
-f = Ap*np.exp(-1j*wp*t) + Am*np.exp(-1j*wm*t)
-xAna = np.real(f)
-yAna = np.imag(f)
-zAna = z0*np.cos(wz*t)
+    Ap = (v0 + wm*x0)/(wm - wp)
+    Am = -(v0 + wp*x0)/(wm - wp)
 
-fig, axs = plt.subplots(3, 1, figsize = (10, 10))
-axs[0].plot(t, pos[:, 0], label = 'Numerical')
-axs[0].plot(t, xAna, label = 'Analytical', linestyle = '--')
-axs[0].set_ylabel(r'x [$\mu m$]')
-axs[0].set_xlabel(r't [$\mu s$]')
-fig.legend()
+    f = Ap*np.exp(-1j*wp*t) + Am*np.exp(-1j*wm*t)
+    xAna = np.real(f)
+    yAna = np.imag(f)
+    zAna = z0*np.cos(wz*t)
 
-axs[1].plot(t, pos[:, 1], label = 'Numerical')
-axs[1].plot(t, yAna, label = 'Analytical', linestyle = '--')
-axs[1].set_ylabel(r'y [$\mu m$]')
-axs[1].set_xlabel(r't [$\mu s$]')
+    fig, axs = plt.subplots(3, 1, figsize = (10, 10))
+    axs[0].plot(t, pos[:, 0])
+    axs[0].plot(t, xAna, linestyle = '--')
+    axs[0].set_ylabel(r'x [$\mu m$]')
+    axs[0].set_xlabel(r't [$\mu s$]')
 
-axs[2].plot(t, pos[:, 2], label = 'Numerical')
-axs[2].plot(t, zAna, label = 'Analytical', linestyle = '--')
-axs[2].set_ylabel(r'z [$\mu m$]')
-axs[2].set_xlabel(r't [$\mu s$]')
+    axs[1].plot(t, pos[:, 1])
+    axs[1].plot(t, yAna, linestyle = '--')
+    axs[1].set_ylabel(r'y [$\mu m$]')
+    axs[1].set_xlabel(r't [$\mu s$]')
 
-
-plt.show()
+    axs[2].plot(t, pos[:, 2])
+    axs[2].plot(t, zAna, linestyle = '--')
+    axs[2].set_ylabel(r'z [$\mu m$]')
+    axs[2].set_xlabel(r't [$\mu s$]')
+    fig.legend(['Numerical', 'Analytical'])
+    savename = filename.replace('.txt', '')
+    plt.savefig(f'{savename}.pdf')
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+    f"{savename}.tex",
+    extra_axis_parameters=[
+        "title style={align=center}",
+        "xmajorticks=true",
+        "ymajorticks=true",
+        "mark options={mark size=2.5pt, line width=1.5pt}",
+        ],
+        strict=True,
+    )
+    plt.show()
 
 # %%

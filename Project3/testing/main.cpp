@@ -5,8 +5,10 @@
 
 
 int main(){
-    testPenningSetup();
+    //testPenningSetup();
 
     //testOneParticleFE();
+
+    testOneParticleRK4();
     return 0;
 }

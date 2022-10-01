@@ -76,6 +76,41 @@ void testOneParticleFE(){
         Trap.particles.at(0).printCurrentVel();
         std::cout << "" << std::endl;
         Trap.evolveForwardEuler(dt);
+    }   
+}
+
+void testOneParticleRK4(){
+    //trap parameters
+    double B0 = 9.65e1;
+    double V0 = 9.65e8;
+    double d = 1e4;
+    //evolution parameter
+    double dt = 0.001; //microseconds
+    int T = 100; //end time
+    int N = T/dt; //number of timesteps
+    //init conditions
+    double x0 = d/2;
+    double z0 = d/2;
+    double vy0 = 10;
+    arma::vec initPos(3);
+    arma::vec initVel(3);
+    initPos(0) = x0; initPos(1) = 0; initPos(2) = z0;
+    initVel(0) = 0; initVel(1) = vy0; initVel(2) = 0; 
+    //particle parameters
+    double mass = 40.078;
+    double charge = 1; 
+    Particle calsium = Particle(charge, mass, initPos, initVel);
+    std::vector<Particle> particles;
+    PenningTrap Trap = PenningTrap(B0, V0, d, particles);
+    Trap.addParticle(calsium);
+
+    for (int i = 0; i < N; i++){
+        double t = dt*i;
+        std::cout << scientificFormat(t);
+        Trap.particles.at(0).printCurrentPos();
+        Trap.particles.at(0).printCurrentVel();
+        std::cout << "" << std::endl;
+        Trap.evolveRK4(dt);
     }
     
 }

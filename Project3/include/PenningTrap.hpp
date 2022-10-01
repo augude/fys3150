@@ -37,4 +37,7 @@ class PenningTrap{
 
         // Evolve the system one time step (dt) using Forward Euler
         void evolveForwardEuler(double dt);
+
+        // Evolve the system one time step (dt) using RK4
+        void evolveRK4(double dt);
 };
