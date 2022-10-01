@@ -85,6 +85,7 @@ for filename in files:
     axs[2].set_xlabel(r't [$\mu s$]')
     fig.legend(['Numerical', 'Analytical'])
     savename = filename.replace('.txt', '')
+    fig.tight_layout()
     plt.savefig(f'{savename}.pdf')
     tikzplotlib.clean_figure()
     tikzplotlib.save(
