@@ -1,20 +1,20 @@
 #include "../include/Particle.hpp"
 
 
-Particle::Particle(double chargeIn, double massIn, arma::vec postionIn, arma::vec velocityIn){
+Particle::Particle(double chargeIn, double massIn, arma::vec positionIn, arma::vec velocityIn){
 
-    charge_ = chargeIn;
-    mass_ = massIn;
-    postion_ = postionIn;
-    velocity_ = velocityIn;
+    charge = chargeIn;
+    mass = massIn;
+    position = positionIn;
+    velocity = velocityIn;
 }
 
 void Particle::printCurrentPos(){
 
-    std::cout << scientificFormat(postion_);
+    std::cout << scientificFormat(position);
 }
 
 void Particle::printCurrentVel(){
 
-    std::cout << scientificFormat(velocity_);
+    std::cout << scientificFormat(velocity);
 }

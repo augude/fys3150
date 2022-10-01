@@ -7,10 +7,10 @@
 
 class PenningTrap{
     public:
-        double B0_;
-        double V0_;
-        double d_;
-        std::vector<Particle> particles_;
+        double B0;
+        double V0;
+        double d;
+        std::vector<Particle> particles;
 
         PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn);
 
@@ -23,16 +23,16 @@ class PenningTrap{
         // External magnetic field at point r=(x,y,z)
         arma::vec magneticField(arma::vec position);
 
-        // Force on particle_i from particle_j
+        // Force on particlei from particlej
         arma::vec forceParticle(int i, int j);
         
-        // The total force on particle_i from the external fields
+        // The total force on particlei from the external fields
         arma::vec totalForceExternal(int i);
 
-        // The total force on particle_i from the other particles
+        // The total force on particlei from the other particles
         arma::vec totalForceParticles(int i);
 
-        // The total force on particle_i from both external fields and other particles
+        // The total force on particlei from both external fields and other particles
         arma::vec totalForce(int i);
 
         // Evolve the system one time step (dt) using Forward Euler

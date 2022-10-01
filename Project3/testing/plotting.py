@@ -9,7 +9,6 @@ sns.set_theme(font_scale = 2)
 data = np.loadtxt('ElectricField.txt')
 
 N = 100
-d = 1e4
 Ex = np.zeros(shape = (N, N))
 Ey = np.zeros(shape = (N, N))
 Ez = np.zeros(shape = (N, N))
@@ -44,8 +43,49 @@ plt.savefig('PenningTrapSetup.pdf')
 plt.show()
 
 # %%
-
 testSetup = np.loadtxt('testOneParticleFE.txt')
+t = testSetup[:, 0]
+pos = testSetup[:, 1:4]
+vel = testSetup[:, 4:]
 
-print(testSetup[:, 3])
+q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
+wz = np.sqrt(q*V0/(m*d**2))
+w0 = q*B0/m
+
+v0 = vel[0, 2]; x0 = pos[0, 0]; z0 = pos[0, 2]
+
+wp = (w0 + np.sqrt(w0**2 - 2*wz**2))/2
+wm = (w0 - np.sqrt(w0**2 - 2*wz**2))/2
+
+Ap = (v0 + wm*x0)/(wm - wp)
+Am = -(v0 + wp*x0)/(wm - wp)
+
+f = Ap*np.exp(-1j*wp*t) + Am*np.exp(-1j*wm*t)
+xAna = np.real(f)
+yAna = np.imag(f)
+zAna = z0*np.cos(wz*t)
+
+# %%
+fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+axs.plot(t, pos[:, 0], label = 'Numerical')
+axs.plot(t, xAna, label = 'Analytical', linestyle = '--')
+axs.set_ylabel(r'x [$\mu m$]')
+axs.set_xlabel(r't [$\mu s$]')
+plt.legend()
+plt.show()
+fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+axs.plot(t, pos[:, 1], label = 'Numerical')
+axs.plot(t, yAna, label = 'Analytical', linestyle = '--')
+axs.set_ylabel(r'y [$\mu m$]')
+axs.set_xlabel(r't [$\mu s$]')
+plt.legend()
+plt.show()
+fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+axs.plot(t, pos[:, 2], label = 'Numerical')
+axs.plot(t, zAna, label = 'Analytical', linestyle = '--')
+axs.set_ylabel(r'z [$\mu m$]')
+axs.set_xlabel(r't [$\mu s$]')
+plt.legend()
+plt.show()
+
 # %%

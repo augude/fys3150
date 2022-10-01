@@ -5,12 +5,12 @@
 class Particle{
     
     public:
-        double charge_;
-        double mass_;
-        arma::vec postion_;
-        arma::vec velocity_;
+        double charge;
+        double mass;
+        arma::vec position;
+        arma::vec velocity;
 
-        Particle(double chargeIn, double massIn, arma::vec postionIn, arma::vec velocityIn);
+        Particle(double chargeIn, double massIn, arma::vec positionIn, arma::vec velocityIn);
 
         //print current positon of particle to screen
         void printCurrentPos();
