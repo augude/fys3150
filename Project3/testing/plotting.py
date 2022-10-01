@@ -49,7 +49,7 @@ pos = testSetup[:, 1:4]
 vel = testSetup[:, 4:]
 
 q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
-wz = np.sqrt(q*V0/(m*d**2))
+wz = np.sqrt(2*q*V0/(m*d**2)) 
 w0 = q*B0/m
 
 v0 = vel[0, 2]; x0 = pos[0, 0]; z0 = pos[0, 2]
@@ -65,27 +65,24 @@ xAna = np.real(f)
 yAna = np.imag(f)
 zAna = z0*np.cos(wz*t)
 
-# %%
-fig, axs = plt.subplots(1, 1, figsize = (10, 10))
-axs.plot(t, pos[:, 0], label = 'Numerical')
-axs.plot(t, xAna, label = 'Analytical', linestyle = '--')
-axs.set_ylabel(r'x [$\mu m$]')
-axs.set_xlabel(r't [$\mu s$]')
-plt.legend()
-plt.show()
-fig, axs = plt.subplots(1, 1, figsize = (10, 10))
-axs.plot(t, pos[:, 1], label = 'Numerical')
-axs.plot(t, yAna, label = 'Analytical', linestyle = '--')
-axs.set_ylabel(r'y [$\mu m$]')
-axs.set_xlabel(r't [$\mu s$]')
-plt.legend()
-plt.show()
-fig, axs = plt.subplots(1, 1, figsize = (10, 10))
-axs.plot(t, pos[:, 2], label = 'Numerical')
-axs.plot(t, zAna, label = 'Analytical', linestyle = '--')
-axs.set_ylabel(r'z [$\mu m$]')
-axs.set_xlabel(r't [$\mu s$]')
-plt.legend()
+fig, axs = plt.subplots(3, 1, figsize = (10, 10))
+axs[0].plot(t, pos[:, 0], label = 'Numerical')
+axs[0].plot(t, xAna, label = 'Analytical', linestyle = '--')
+axs[0].set_ylabel(r'x [$\mu m$]')
+axs[0].set_xlabel(r't [$\mu s$]')
+fig.legend()
+
+axs[1].plot(t, pos[:, 1], label = 'Numerical')
+axs[1].plot(t, yAna, label = 'Analytical', linestyle = '--')
+axs[1].set_ylabel(r'y [$\mu m$]')
+axs[1].set_xlabel(r't [$\mu s$]')
+
+axs[2].plot(t, pos[:, 2], label = 'Numerical')
+axs[2].plot(t, zAna, label = 'Analytical', linestyle = '--')
+axs[2].set_ylabel(r'z [$\mu m$]')
+axs[2].set_xlabel(r't [$\mu s$]')
+
+
 plt.show()
 
 # %%

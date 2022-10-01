@@ -17,7 +17,7 @@ arma::vec PenningTrap::electricField(arma::vec position){
     E(0) = position(0);
     E(1) = position(1);
     E(2) = -2*position(2);
-    E = E*V0/(2*d*d);
+    E = E*V0/(d*d);
     return E;
 }
 
