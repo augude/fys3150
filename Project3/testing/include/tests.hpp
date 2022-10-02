@@ -8,3 +8,7 @@ void testOneParticleFE();
 
 //testing the time evolution of one particle with RK4
 void testOneParticleRK4();
+
+//testing the movement of two particles in the trap
+//NB: The code does not yet support the option of turning off the internal fields
+void testDoubleSetup(bool internalForces = true);

@@ -31,7 +31,7 @@ arma::vec PenningTrap::magneticField(arma::vec position){
 
 arma::vec PenningTrap::forceParticle(int i, int j){
 
-    //throw an assertion if you try to calculate the force form the particle itself 
+    //throw an assertion if you try to calculate the force from the particle itself 
     assert(i != j);
 
     Particle particleOn = particles.at(i);
@@ -68,6 +68,9 @@ arma::vec PenningTrap::totalForceParticles(int i){
 
 arma::vec PenningTrap::totalForce(int i){
     arma::vec totalForce = totalForceExternal(i) + totalForceParticles(i);
+
+    //std::cout << totalForceExternal(i) << std::endl;
+    //std::cout << totalForceParticles(i) << std::endl;
 
     return totalForce;
 }

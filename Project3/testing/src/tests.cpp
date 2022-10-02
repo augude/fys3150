@@ -84,7 +84,7 @@ void testOneParticleRK4(){
     double B0 = 9.65e1;
     double V0 = 9.65e8;
     double d = 1e4;
-    //evolution parameter
+    //evolution parameters
     double dt = 0.001; //microseconds
     int T = 100; //end time
     int N = T/dt; //number of timesteps
@@ -111,6 +111,69 @@ void testOneParticleRK4(){
         Trap.particles.at(0).printCurrentVel();
         std::cout << "" << std::endl;
         Trap.evolveRK4(dt);
-    }
+    }   
+}
+
+void testDoubleSetup(bool internalForces = true){
+    //trap parameters
+    double B0 = 9.65e1;
+    double V0 = 9.65e8;
+    double d = 1e4;
+    //evolution parameters
+    double dt = 0.001; //microseconds
+    int T = 100; //end time
+    int N = T/dt; //number of timesteps
+    //init conditions, must have different init pos for the particles to avoid infinite Coulomb-forces
+    arma::vec initPos1(3); arma::vec initVel1(3);
+    arma::vec initPos2(3); arma::vec initVel2(3);
+    initPos1(0) = d/2; initPos1(1) = -d/5; initPos1(2) = 3*d/4;
+    initVel1(0) = -5; initVel1(1) = 8; initVel1(2) = -3; 
+    initPos2(0) = d/2 + 4; initPos2(1) = -d/5 - 5; initPos2(2) = 3*d/4 + 2;
+    initVel2(0) = -8; initVel2(1) = 5; initVel2(2) = 3; 
+    //particle parameters
+    double mass = 40.078;
+    double charge = 1; 
     
+    if (internalForces == true){
+        //add particles to the same trap if you want internal forces
+        Particle calsium1 = Particle(charge, mass, initPos1, initVel1);
+        Particle calsium2 = Particle(charge, mass, initPos2, initVel2);
+        std::vector<Particle> particles;
+        PenningTrap Trap = PenningTrap(B0, V0, d, particles);
+        Trap.addParticle(calsium1);
+        Trap.addParticle(calsium2);
+
+        for (int i = 0; i < N; i++){
+            double t = dt*i;
+            std::cout << scientificFormat(t);
+            for (int n = 0; n < size(Trap.particles); n++){
+                Trap.particles.at(n).printCurrentPos();
+                Trap.particles.at(n).printCurrentVel();
+            }
+            std::cout << "" << std::endl;
+            Trap.evolveRK4(dt);
+        }   
+    }
+    else{
+        //add particles to identical, but different traps if you don't want internal forces
+        Particle calsium1 = Particle(charge, mass, initPos1, initVel1);
+        Particle calsium2 = Particle(charge, mass, initPos2, initVel2);
+        std::vector<Particle> particles;
+        PenningTrap Trap1 = PenningTrap(B0, V0, d, particles);
+        PenningTrap Trap2 = PenningTrap(B0, V0, d, particles);
+        Trap1.addParticle(calsium1);
+        Trap2.addParticle(calsium2);
+
+        for (int i = 0; i < N; i++){
+            double t = dt*i;
+            std::cout << scientificFormat(t);            
+            Trap1.particles.at(0).printCurrentPos();
+            Trap1.particles.at(0).printCurrentVel();
+            Trap2.particles.at(0).printCurrentPos();
+            Trap2.particles.at(0).printCurrentVel();
+            std::cout << "" << std::endl;
+            Trap1.evolveRK4(dt);
+            Trap2.evolveRK4(dt);
+        }   
+    } 
 }

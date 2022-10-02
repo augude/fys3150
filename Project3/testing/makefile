@@ -1,7 +1,16 @@
-all: build run
+all: testPenningSetup testOneParticleFE testOneParticleRK4 testDoubleSetupWithInternal testDoubleSetupWithoutInternal
 
-build:
-	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe 
+testPenningSetup: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "PenningSetup" > ElectricField.txt	
 
-run:
-	./tests.exe > testOneParticleRK4.txt
+testOneParticleFE: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "OneParticleFE" > testOneParticleFE.txt	
+
+testOneParticleRK4: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "OneParticleRK4" > testOneParticleRK4.txt	
+
+testDoubleSetupWithInternal: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "DoubleSetupWithInternal" > testDoubleSetupWithInternal.txt	
+
+testDoubleSetupWithoutInternal: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "DoubleSetupWithoutInternal" > testDoubleSetupWithoutInternal.txt	

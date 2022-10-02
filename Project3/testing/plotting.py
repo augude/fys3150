@@ -39,7 +39,7 @@ axs.quiver(Y[::5, ::5], Z[::5, ::5], Ey[::5, ::5], Ez[::5, ::5])
 axs.set_xlabel(r'y [$\mu m$]')
 axs.set_ylabel(r'z [$\mu m$]')
 fig.tight_layout()
-plt.savefig('PenningTrapSetup.pdf')
+#plt.savefig('PenningTrapSetup.pdf')
 plt.show()
 
 # %%
@@ -83,10 +83,10 @@ for filename in files:
     axs[2].plot(t, zAna, linestyle = '--')
     axs[2].set_ylabel(r'z [$\mu m$]')
     axs[2].set_xlabel(r't [$\mu s$]')
-    fig.legend(['Numerical', 'Analytical'])
+    plt.legend(['Numerical', 'Analytical'])
     savename = filename.replace('.txt', '')
     fig.tight_layout()
-    plt.savefig(f'{savename}.pdf')
+    #plt.savefig(f'{savename}.pdf')
     tikzplotlib.clean_figure()
     tikzplotlib.save(
     f"{savename}.tex",
@@ -99,5 +99,142 @@ for filename in files:
         strict=True,
     )
     plt.show()
+    
+
+# %%
+files = ['testDoubleSetupWithInternal.txt', 'testDoubleSetupWithoutInternal.txt']
+
+for filename in files:
+    savename = filename.replace('.txt', '')
+    savename = savename.replace('testDoubleSetup', '')
+    print(savename)
+    data = np.loadtxt(filename)
+    t = data[:, 0]
+    pos1 = data[:, 1:4]
+    vel1 = data[:, 4:7]
+    pos2 = data[:, 7:10]
+    vel2 = data[:, 10:13]
+    
+    r = np.sqrt( (pos1[:, 0] - pos2[:, 0])**2 + (pos1[:, 1] - pos2[:, 1])**2 + (pos1[:, 2] - pos2[:, 2])**2) 
+    fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+    axs.plot(t, r)
+    axs.set_xlabel(r't [$\mu s$]')
+    axs.set_ylabel(r'r [$\mu m$]')
+    fig.tight_layout()
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+    f"{savename}Distance.tex",
+    extra_axis_parameters=[
+        "title style={align=center}",
+        "xmajorticks=true",
+        "ymajorticks=true",
+        "mark options={mark size=2.5pt, line width=1.5pt}",
+        ],
+        strict=True,
+    )
+    plt.show()
+    
+    #%%
+    
+    fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+    axs.plot(pos1[:, 0], pos1[:, 1])
+    axs.plot(pos2[:, 0], pos2[:, 1], linestyle = '--')
+    axs.set_xlabel(r'x [$\mu m$]')
+    axs.set_ylabel(r'y [$\mu m$]')
+    plt.legend(['Particle 1', 'Particle 2'])
+    fig.tight_layout()
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+    f"{savename}XY.tex",
+    extra_axis_parameters=[
+        "title style={align=center}",
+        "xmajorticks=true",
+        "ymajorticks=true",
+        "mark options={mark size=2.5pt, line width=1.5pt}",
+        ],
+        strict=True,
+    )
+    plt.show()
+    
+    fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+    axs.plot(pos1[:, 0], vel1[:, 0])
+    axs.plot(pos2[:, 0], vel2[:, 0], linestyle = '--')
+    axs.set_xlabel(r'x [$\mu m$]')
+    axs.set_ylabel(r'$v_x$ [$m/s$]')
+    plt.legend(['Particle 1', 'Particle 2'])
+    fig.tight_layout()
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+    f"{savename}PhaseX.tex",
+    extra_axis_parameters=[
+        "title style={align=center}",
+        "xmajorticks=true",
+        "ymajorticks=true",
+        "mark options={mark size=2.5pt, line width=1.5pt}",
+        ],
+        strict=True,
+    )
+    plt.show()
+    
+    fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+    axs.plot(pos1[:, 1], vel1[:, 1])
+    axs.plot(pos2[:, 1], vel2[:, 1], linestyle = '--')
+    axs.set_xlabel(r'y [$\mu m$]')
+    axs.set_ylabel(r'$v_y$ [$m/s$]')
+    plt.legend(['Particle 1', 'Particle 2'])
+    fig.tight_layout()
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+    f"{savename}PhaseY.tex",
+    extra_axis_parameters=[
+        "title style={align=center}",
+        "xmajorticks=true",
+        "ymajorticks=true",
+        "mark options={mark size=2.5pt, line width=1.5pt}",
+        ],
+        strict=True,
+    )
+    plt.show()
+    
+    fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+    axs.plot(pos1[:, 2], vel1[:, 2])
+    axs.plot(pos2[:, 2], vel2[:, 2], linestyle = '--')
+    axs.set_xlabel(r'z [$\mu m$]')
+    axs.set_ylabel(r'$v_z$ [$m/s$]')
+    plt.legend(['Particle 1', 'Particle 2'])
+    fig.tight_layout()
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+    f"{savename}PhaseZ.tex",
+    extra_axis_parameters=[
+        "title style={align=center}",
+        "xmajorticks=true",
+        "ymajorticks=true",
+        "mark options={mark size=2.5pt, line width=1.5pt}",
+        ],
+        strict=True,
+    )
+    plt.show()
+    
+    fig = plt.figure(figsize = (10, 10))
+    axs = fig.add_subplot(1, 1, 1, projection = '3d')
+    axs.plot3D(pos1[:, 0], pos1[:, 1], pos1[:, 2])
+    axs.plot3D(pos2[:, 0], pos2[:, 1], pos2[:, 2], linestyle = '--')
+    axs.set_xlabel(r'x [$\mu m$]')
+    axs.set_ylabel(r'y [$\mu m$]')
+    axs.set_zlabel(r'z [$\mu m$]')
+    axs.set_xticks([-8000, -4000, 4000, 8000])
+    axs.set_yticks([-8000, -4000, 4000, 8000])
+    axs.set_zticks([-6000, -3000, 3000, 6000])
+    plt.legend(['Particle 1', 'Particle 2'])
+    fig.tight_layout()
+    plt.savefig(f"{savename}3D.pdf")
+    plt.show()
+    
+
+# %%
+R = 8.31446261815324
+T = 298
+print(1.5*R*T)
 
 # %%
