@@ -133,9 +133,7 @@ for filename in files:
         strict=True,
     )
     plt.show()
-    
-    #%%
-    
+
     fig, axs = plt.subplots(1, 1, figsize = (10, 10))
     axs.plot(pos1[:, 0], pos1[:, 1])
     axs.plot(pos2[:, 0], pos2[:, 1], linestyle = '--')
@@ -231,10 +229,5 @@ for filename in files:
     plt.savefig(f"{savename}3D.pdf")
     plt.show()
     
-
-# %%
-R = 8.31446261815324
-T = 298
-print(1.5*R*T)
 
 # %%
