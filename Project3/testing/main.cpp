@@ -20,6 +20,10 @@ int main(int argc, char* argv[]){
     }
     else if (testString == "DoubleSetupWithoutInternal"){
         testDoubleSetup(false);
-    };
+    }
+    else if (testString == "CompareStepsize"){
+        double stepSize = atof(argv[2]);
+        compareStepsize(stepSize);
+    }
     return 0;
 }

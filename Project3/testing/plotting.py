@@ -6,6 +6,7 @@ import tikzplotlib
 
 sns.set_theme(font_scale = 2)
 
+#%%
 data = np.loadtxt('ElectricField.txt')
 
 N = 100
@@ -229,5 +230,38 @@ for filename in files:
     plt.savefig(f"{savename}3D.pdf")
     plt.show()
     
+
+# %%
+files = ['1e-1.txt', '1e-2.txt', '1e-3.txt', '1e-4.txt', '1e-5.txt']
+fig, axs = plt.subplots(nrows = 2, ncols = 1, figsize = (12, 10))
+for index, file in enumerate(files):
+    data = np.loadtxt(file)
+    t = data[:, 0]
+    posFE = data[:, 1:4]
+    posRK4 = data[:, 4:7]
+    
+    z0 = posFE[0, 2]
+    q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
+    wz = np.sqrt(2*q*V0/(m*d**2)) 
+    
+    zAna = z0*np.cos(wz*t)
+
+    relErrorFE = (posFE[:, 2] - zAna)/zAna
+    relErrorRK4 = (posRK4[:, 2] - zAna)/zAna
+    
+    axs[0].plot(t, relErrorFE, label = f'$h = 10^-{index + 1}$')
+    axs[1].plot(t, relErrorRK4, label = f'$h = 10^-{index + 1}$')
+    
+axs[0].set_xlabel(r't $[\mu s]$')
+axs[0].set_ylabel(r'$\epsilon$')
+axs[0].text(x = 0, y = -200, s = 'FE')
+axs[1].set_xlabel(r't $[\mu s]$')
+axs[1].set_ylabel(r'$\epsilon$')
+axs[1].text(x = 0, y = -0.0050, s = 'RK4')
+
+lgd = axs[0].legend(loc = 'upper center', ncol = len(files)//2, fancybox = True, 
+           bbox_to_anchor = (0.5, 1.25))
+fig.tight_layout()
+plt.show()
 
 # %%

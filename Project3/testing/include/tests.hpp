@@ -10,5 +10,8 @@ void testOneParticleFE();
 void testOneParticleRK4();
 
 //testing the movement of two particles in the trap
-//NB: The code does not yet support the option of turning off the internal fields
 void testDoubleSetup(bool internalForces = true);
+
+//calculate time evolution for different stepsizes using both FE and RK4
+void compareStepsize(double stepSize);
+

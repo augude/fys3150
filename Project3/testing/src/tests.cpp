@@ -177,3 +177,40 @@ void testDoubleSetup(bool internalForces = true){
         }   
     } 
 }
+
+void compareStepsize(double stepSize){
+    //trap parameters
+    double B0 = 9.65e1;
+    double V0 = 9.65e8;
+    double d = 1e4;
+    //evolution parameter
+    int T = 100; //end time
+    int N = T/stepSize; //number of timesteps
+    //init conditions
+    double x0 = d/2;
+    double z0 = d/2;
+    double vy0 = 10;
+    arma::vec initPos(3);
+    arma::vec initVel(3);
+    initPos(0) = x0; initPos(1) = 0; initPos(2) = z0;
+    initVel(0) = 0; initVel(1) = vy0; initVel(2) = 0; 
+    //particle parameters
+    double mass = 40.078;
+    double charge = 1; 
+    Particle calsium = Particle(charge, mass, initPos, initVel);
+    std::vector<Particle> particles;
+    PenningTrap TrapFE = PenningTrap(B0, V0, d, particles);
+    PenningTrap TrapRK4 = PenningTrap(B0, V0, d, particles);
+    TrapFE.addParticle(calsium);
+    TrapRK4.addParticle(calsium);
+
+    for (int i = 0; i < N; i++){
+        double t = stepSize*i;
+        std::cout << scientificFormat(t);
+        TrapFE.particles.at(0).printCurrentPos();
+        TrapRK4.particles.at(0).printCurrentPos();
+        std::cout << "" << std::endl;
+        TrapFE.evolveForwardEuler(stepSize);
+        TrapRK4.evolveRK4(stepSize);
+    }   
+}
