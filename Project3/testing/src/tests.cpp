@@ -184,7 +184,7 @@ void compareStepsize(double stepSize){
     double V0 = 9.65e8;
     double d = 1e4;
     //evolution parameter
-    int T = 100; //end time
+    int T = 20; //end time
     int N = T/stepSize; //number of timesteps
     //init conditions
     double x0 = d/2;
@@ -208,7 +208,9 @@ void compareStepsize(double stepSize){
         double t = stepSize*i;
         std::cout << scientificFormat(t);
         TrapFE.particles.at(0).printCurrentPos();
+        TrapFE.particles.at(0).printCurrentVel();
         TrapRK4.particles.at(0).printCurrentPos();
+        TrapRK4.particles.at(0).printCurrentVel();
         std::cout << "" << std::endl;
         TrapFE.evolveForwardEuler(stepSize);
         TrapRK4.evolveRK4(stepSize);
