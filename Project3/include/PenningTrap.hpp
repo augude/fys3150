@@ -11,6 +11,11 @@ class PenningTrap{
         double B0;
         double V0;
         double d;
+
+        double f;
+        double t;
+        double w;
+        
         std::vector<Particle> particles;
 
         PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn);
