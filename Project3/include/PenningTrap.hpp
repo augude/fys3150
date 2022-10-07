@@ -3,6 +3,7 @@
 #include <armadillo>
 #include <vector>
 #include <cassert>
+#include <math.h>
 #include "Particle.hpp"
 
 class PenningTrap{
@@ -16,6 +17,9 @@ class PenningTrap{
 
         // Add a particle to the trap
         void addParticle(Particle pIn);
+
+        // Updates V0 according to current time
+        void setV0(double &V0,double w,double t,double f);
 
         // External electric field at point r=(x,y,z)
         arma::vec electricField(arma::vec position);
@@ -40,4 +44,7 @@ class PenningTrap{
 
         // Evolve the system one time step (dt) using RK4
         void evolveRK4(double dt);
+
+        //Evolves the system one time step and updates total time
+        void evolveRK4witht(double dt,double &t);
 };

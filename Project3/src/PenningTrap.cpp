@@ -5,6 +5,12 @@ PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Parti
     V0 = V0In;
     d = dIn;
     particles = particlesIn;
+    //TODO add w 
+    //TODO add changes to t into the functins
+    double f =0;
+    double w=0; //dummy variable
+    double t = 0;
+
 }
 
 void PenningTrap::addParticle(Particle pIn){
@@ -12,20 +18,36 @@ void PenningTrap::addParticle(Particle pIn){
     particles.push_back(pIn);
 }
 
+void PenningTrap::setV0(double &V0,double w,double t,double f){
+    V0 = V0*(1+f*cos(w*t));
+}
+
 arma::vec PenningTrap::electricField(arma::vec position){
     arma::vec E = arma::vec(3);
-    E(0) = position(0);
-    E(1) = position(1);
-    E(2) = -2*position(2);
-    E = E*V0/(d*d);
+
+    if (norm(position) < d){
+        E.zeros();
+    } else {
+        E(0) = position(0);
+        E(1) = position(1);
+        E(2) = -2*position(2);
+        E = E*V0/(d*d);
+    }
+
     return E;
 }
 
 arma::vec PenningTrap::magneticField(arma::vec position){
     arma::vec B = arma::vec(3);
-    B(0) = 0;
-    B(1) = 0;
-    B(2) = B0;
+
+    if (norm(position) < d){
+        B.zeros();
+    } else {
+        B(0) = 0;
+        B(1) = 0;
+        B(2) = B0;
+    }
+
     return B;
 }
 
@@ -98,6 +120,44 @@ void PenningTrap::evolveForwardEuler(double dt){
 }
 
 void PenningTrap::evolveRK4(double dt){
+    int n = size(particles);
+
+    arma::mat newPos(3, n);
+    arma::mat newVel(3, n);
+
+    for (int i = 0; i < n; i++){
+        arma::vec posI = particles.at(i).position; //store pos at time i 
+        arma::vec velI = particles.at(i).velocity; //store vel at time i
+
+        arma::vec k1vel = dt*totalForce(i)/particles.at(i).mass;
+        arma::vec k1pos = dt*particles.at(i).velocity;
+        newVel.col(i) = velI + 0.5*k1vel; //calculate midpoint using k1
+        newPos.col(i) = posI + 0.5*k1pos; //calculate midpoint using k1
+        
+        arma::vec k2vel = dt*totalForce(i)/particles.at(i).mass;
+        arma::vec k2pos = dt*particles.at(i).velocity;
+        newVel.col(i) = velI + 0.5*k2vel; //calculate midpoint using k2
+        newPos.col(i) = posI + 0.5*k2pos; //calculate midpoint using k2
+        
+        arma::vec k3vel = dt*totalForce(i)/particles.at(i).mass;
+        arma::vec k3pos = dt*particles.at(i).velocity;
+        newVel.col(i) = velI + k3vel; //calculate endpoint using k3
+        newPos.col(i) = posI + k3pos; //calculate endpoint using k3
+
+        arma::vec k4vel = dt*totalForce(i)/particles.at(i).mass;
+        arma::vec k4pos = dt*particles.at(i).velocity;
+        
+        newVel.col(i) = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
+        newPos.col(i) = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
+    }
+
+    for (int i = 0; i < n; i++){
+        particles.at(i).velocity = newVel.col(i);
+        particles.at(i).position = newPos.col(i);
+    }
+}
+
+void PenningTrap::evolveRK4witht(double dt,double &t){
     int n = size(particles);
 
     arma::mat newPos(3, n);
