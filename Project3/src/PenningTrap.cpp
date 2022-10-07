@@ -99,18 +99,18 @@ void PenningTrap::evolveRK4(double dt){
 
         arma::vec k1vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k1pos = dt*particles.at(i).velocity;
-        particles.at(i).velocity = velI + 0.5*k1vel; //calculate midpoint using k1
-        particles.at(i).position = posI + 0.5*k1pos; //calculate midpoint using k1
+        newVel.col(i) = velI + 0.5*k1vel; //calculate midpoint using k1
+        newPos.col(i) = posI + 0.5*k1pos; //calculate midpoint using k1
         
         arma::vec k2vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k2pos = dt*particles.at(i).velocity;
-        particles.at(i).velocity = velI + 0.5*k2vel; //calculate midpoint using k2
-        particles.at(i).position = posI + 0.5*k2pos; //calculate midpoint using k2
+        newVel.col(i) = velI + 0.5*k2vel; //calculate midpoint using k2
+        newPos.col(i) = posI + 0.5*k2pos; //calculate midpoint using k2
         
         arma::vec k3vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k3pos = dt*particles.at(i).velocity;
-        particles.at(i).velocity = velI + k3vel; //calculate endpoint using k3
-        particles.at(i).position = posI + k3pos; //calculate endpoint using k3
+        newVel.col(i) = velI + k3vel; //calculate endpoint using k3
+        newPos.col(i) = posI + k3pos; //calculate endpoint using k3
 
         arma::vec k4vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k4pos = dt*particles.at(i).velocity;
