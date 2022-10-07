@@ -78,11 +78,21 @@ arma::vec PenningTrap::totalForce(int i){
 void PenningTrap::evolveForwardEuler(double dt){
     int n = size(particles);
 
+    //Creating new matrices to store new values temporarily
+    arma::mat newPos(3, n);
+    arma::mat newVel(3, n);
+
     for (int i = 0; i < n; i++){
         arma::vec force = totalForce(i)/particles.at(i).mass;
         //need to calculate change in position before change in velocity to 'aviod' Euler-Cromer
-        particles.at(i).position += dt*particles.at(i).velocity;
-        particles.at(i).velocity += dt*force;
+
+        newPos.col(i)=particles.at(i).position + dt*particles.at(i).velocity;
+        newVel.col(i)=particles.at(i).velocity + dt*force;
+    }
+
+    for (int i = 0; i < n; i++){
+        particles.at(i).position=newPos.col(i);
+        particles.at(i).velocity=newVel.col(i);
     }
 
 }
