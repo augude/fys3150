@@ -15,7 +15,7 @@ void PenningTrap::addParticle(Particle pIn){
 arma::vec PenningTrap::electricField(arma::vec position){
     arma::vec E = arma::vec(3);
     
-    if norm(position) > d{
+    if (norm(position) > d){
         E.zeros();
     } else {
         E(0) = position(0);
@@ -30,7 +30,7 @@ arma::vec PenningTrap::electricField(arma::vec position){
 arma::vec PenningTrap::magneticField(arma::vec position){
     arma::vec B = arma::vec(3);
     
-    if norm(position) > d{
+    if (norm(position) > d){
         B.zeros();
     } else {
         B(0) = 0;
