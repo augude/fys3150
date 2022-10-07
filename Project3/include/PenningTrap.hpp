@@ -19,7 +19,7 @@ class PenningTrap{
         void addParticle(Particle pIn);
 
         // Updates V0 according to current time
-        void setV0(double &V0,double w,double t,double f);
+        void updateV0(double &V0,double w,double t,double f);
 
         // External electric field at point r=(x,y,z)
         arma::vec electricField(arma::vec position);

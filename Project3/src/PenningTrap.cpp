@@ -18,7 +18,7 @@ void PenningTrap::addParticle(Particle pIn){
     particles.push_back(pIn);
 }
 
-void PenningTrap::setV0(double &V0,double w,double t,double f){
+void PenningTrap::updateV0(double &V0,double w,double t,double f){
     V0 = V0*(1+f*cos(w*t));
 }
 
@@ -193,4 +193,8 @@ void PenningTrap::evolveRK4witht(double dt,double &t){
         particles.at(i).velocity = newVel.col(i);
         particles.at(i).position = newPos.col(i);
     }
+
+    //Update t and then update V0 for next evolution
+    t+=dt;
+    updateV0(V0,w,t,f);
 }
