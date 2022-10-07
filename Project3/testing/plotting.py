@@ -32,8 +32,8 @@ for i in range(N**2):
     V[ind1, ind2] = data[i, 8]       
     
 fig, axs = plt.subplots(ncols = 1, nrows = 1, figsize = (12, 10))
-plt.contourf(Y, Z, V, cmap = 'cool')
-cbar = plt.colorbar(cmap = 'cool')
+plt.contourf(Y, Z, V, cmap = 'flag')
+cbar = plt.colorbar(cmap = 'flag')
 cbar.set_label(r'Electric potential [$\frac{u(\mu m)^2}{(\mu s)^2 e}$]')
 axs.quiver(Y[::5, ::5], Z[::5, ::5], Ey[::5, ::5], Ez[::5, ::5])
 axs.set_xlabel(r'y [$\mu m$]')
@@ -122,6 +122,7 @@ for filename in files:
     axs.set_ylabel(r'r [$\mu m$]')
     fig.tight_layout()
     tikzplotlib.clean_figure()
+    plt.title(f'{savename}')
     tikzplotlib.save(
     f"{savename}Distance.tex",
     extra_axis_parameters=[
@@ -136,13 +137,16 @@ for filename in files:
 
     fig, axs = plt.subplots(1, 1, figsize = (10, 10))
     axs.plot(pos1[:, 0], pos1[:, 1])
+    axs.scatter(pos1[0, 0], pos1[0, 1], s = 100)
     axs.plot(pos2[:, 0], pos2[:, 1], linestyle = '--')
+    axs.scatter(pos2[0, 0], pos2[0, 1], s = 100)
     axs.set_xlabel(r'x [$\mu m$]')
     axs.set_ylabel(r'y [$\mu m$]')
-    plt.legend(['Particle 1', 'Particle 2'])
+    plt.legend(['Particle 1', 'Start particle 1', 'Particle 2', 'Start particle 2'])
     fig.tight_layout()
-    tikzplotlib.clean_figure()
-    tikzplotlib.save(
+    #tikzplotlib.clean_figure()
+    plt.title(f'{savename}')
+    """tikzplotlib.save(
     f"{savename}XY.tex",
     extra_axis_parameters=[
         "title style={align=center}",
@@ -151,18 +155,21 @@ for filename in files:
         "mark options={mark size=2.5pt, line width=1.5pt}",
         ],
         strict=True,
-    )
+    )"""
     plt.show()
     
     fig, axs = plt.subplots(1, 1, figsize = (10, 10))
     axs.plot(pos1[:, 0], vel1[:, 0])
+    axs.scatter(pos1[0, 0], vel1[0, 0], s = 100)
     axs.plot(pos2[:, 0], vel2[:, 0], linestyle = '--')
+    axs.scatter(pos2[0, 0], vel2[0, 0], s = 100)
     axs.set_xlabel(r'x [$\mu m$]')
     axs.set_ylabel(r'$v_x$ [$m/s$]')
-    plt.legend(['Particle 1', 'Particle 2'])
+    plt.legend(['Particle 1', 'Start particle 1', 'Particle 2', 'Start particle 2'])
     fig.tight_layout()
-    tikzplotlib.clean_figure()
-    tikzplotlib.save(
+    #tikzplotlib.clean_figure()
+    plt.title(f'{savename}')
+    """tikzplotlib.save(
     f"{savename}PhaseX.tex",
     extra_axis_parameters=[
         "title style={align=center}",
@@ -171,17 +178,20 @@ for filename in files:
         "mark options={mark size=2.5pt, line width=1.5pt}",
         ],
         strict=True,
-    )
+    )"""
     plt.show()
     
     fig, axs = plt.subplots(1, 1, figsize = (10, 10))
     axs.plot(pos1[:, 1], vel1[:, 1])
+    axs.scatter(pos1[0, 1], vel1[0, 1], s = 100)
     axs.plot(pos2[:, 1], vel2[:, 1], linestyle = '--')
+    axs.scatter(pos2[0, 1], vel2[0, 1], s = 100)
     axs.set_xlabel(r'y [$\mu m$]')
     axs.set_ylabel(r'$v_y$ [$m/s$]')
-    plt.legend(['Particle 1', 'Particle 2'])
+    plt.legend(['Particle 1', 'Start particle 1', 'Particle 2', 'Start particle 2'])
     fig.tight_layout()
-    tikzplotlib.clean_figure()
+    plt.title(f'{savename}')
+    """tikzplotlib.clean_figure()
     tikzplotlib.save(
     f"{savename}PhaseY.tex",
     extra_axis_parameters=[
@@ -191,17 +201,20 @@ for filename in files:
         "mark options={mark size=2.5pt, line width=1.5pt}",
         ],
         strict=True,
-    )
+    )"""
     plt.show()
     
     fig, axs = plt.subplots(1, 1, figsize = (10, 10))
     axs.plot(pos1[:, 2], vel1[:, 2])
+    axs.scatter(pos1[0, 2], vel1[0, 2], s = 100)
     axs.plot(pos2[:, 2], vel2[:, 2], linestyle = '--')
+    axs.scatter(pos2[0, 2], vel2[0, 2], s = 100)
     axs.set_xlabel(r'z [$\mu m$]')
     axs.set_ylabel(r'$v_z$ [$m/s$]')
-    plt.legend(['Particle 1', 'Particle 2'])
+    plt.legend(['Particle 1', 'Start particle 1', 'Particle 2', 'Start particle 2'])
+    plt.title(f'{savename}')
     fig.tight_layout()
-    tikzplotlib.clean_figure()
+    """tikzplotlib.clean_figure()
     tikzplotlib.save(
     f"{savename}PhaseZ.tex",
     extra_axis_parameters=[
@@ -211,20 +224,20 @@ for filename in files:
         "mark options={mark size=2.5pt, line width=1.5pt}",
         ],
         strict=True,
-    )
+    )"""
     plt.show()
     
     fig = plt.figure(figsize = (10, 10))
     axs = fig.add_subplot(1, 1, 1, projection = '3d')
     axs.plot3D(pos1[:, 0], pos1[:, 1], pos1[:, 2])
-    axs.plot3D(pos2[:, 0], pos2[:, 1], pos2[:, 2], linestyle = '--')
+    axs.scatter(pos1[0, 0], pos1[0, 1], pos1[0, 2], s = 100)
+    axs.plot3D(pos2[:, 0], pos2[:, 1], pos2[:, 2])
+    axs.scatter(pos2[0, 0], pos2[0, 1], pos2[0, 2], s = 100)
     axs.set_xlabel(r'x [$\mu m$]')
     axs.set_ylabel(r'y [$\mu m$]')
     axs.set_zlabel(r'z [$\mu m$]')
-    axs.set_xticks([-8000, -4000, 4000, 8000])
-    axs.set_yticks([-8000, -4000, 4000, 8000])
-    axs.set_zticks([-6000, -3000, 3000, 6000])
-    plt.legend(['Particle 1', 'Particle 2'])
+    plt.title(f'{savename}')
+    plt.legend(['Particle 1', 'Start particle 1', 'Particle 2', 'Start particle 2'])
     fig.tight_layout()
     #plt.savefig(f"{savename}3D.pdf")
     plt.show()

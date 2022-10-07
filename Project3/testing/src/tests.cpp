@@ -121,15 +121,15 @@ void testDoubleSetup(bool internalForces = true){
     double d = 1e4;
     //evolution parameters
     double dt = 0.001; //microseconds
-    int T = 100; //end time
+    int T = 20; //end time
     int N = T/dt; //number of timesteps
     //init conditions, must have different init pos for the particles to avoid infinite Coulomb-forces
     arma::vec initPos1(3); arma::vec initVel1(3);
     arma::vec initPos2(3); arma::vec initVel2(3);
-    initPos1(0) = d/2; initPos1(1) = -d/5; initPos1(2) = 3*d/4;
-    initVel1(0) = -5; initVel1(1) = 8; initVel1(2) = -3; 
-    initPos2(0) = d/2 + 4; initPos2(1) = -d/5 - 5; initPos2(2) = 3*d/4 + 2;
-    initVel2(0) = -8; initVel2(1) = 5; initVel2(2) = 3; 
+    initPos1(0) = -9.773; initPos1(1) = -5.226; initPos1(2) = -10.226;
+    initVel1(0) = 0.0; initVel1(1) = 0.0; initVel1(2) = 0.0; 
+    initPos2(0) = -4; initPos2(1) = -11; initPos2(2) = 16;
+    initVel2(0) = 0.0; initVel2(1) = 0.0; initVel2(2) = 0.0; 
     //particle parameters
     double mass = 40.078;
     double charge = 1; 

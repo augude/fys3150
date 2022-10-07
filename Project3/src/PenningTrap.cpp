@@ -84,13 +84,16 @@ void PenningTrap::evolveForwardEuler(double dt){
         particles.at(i).position += dt*particles.at(i).velocity;
         particles.at(i).velocity += dt*force;
     }
+
 }
 
 void PenningTrap::evolveRK4(double dt){
     int n = size(particles);
 
+    arma::mat newPos(3, n);
+    arma::mat newVel(3, n);
+
     for (int i = 0; i < n; i++){
-        
         arma::vec posI = particles.at(i).position; //store pos at time i 
         arma::vec velI = particles.at(i).velocity; //store vel at time i
 
@@ -112,8 +115,12 @@ void PenningTrap::evolveRK4(double dt){
         arma::vec k4vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k4pos = dt*particles.at(i).velocity;
         
-        particles.at(i).velocity = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
-        particles.at(i).position = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
-        
+        newVel.col(i) = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
+        newPos.col(i) = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
+    }
+
+    for (int i = 0; i < n; i++){
+        particles.at(i).velocity = newVel.col(i);
+        particles.at(i).position = newPos.col(i);
     }
 }
