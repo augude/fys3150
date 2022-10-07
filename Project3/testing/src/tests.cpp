@@ -120,13 +120,13 @@ void testDoubleSetup(bool internalForces = true){
     double V0 = 9.65e8;
     double d = 1e4;
     //evolution parameters
-    double dt = 0.001; //microseconds
+    double dt = 0.01; //microseconds
     int T = 20; //end time
     int N = T/dt; //number of timesteps
     //init conditions, must have different init pos for the particles to avoid infinite Coulomb-forces
     arma::vec initPos1(3); arma::vec initVel1(3);
     arma::vec initPos2(3); arma::vec initVel2(3);
-    initPos1(0) = -9.773; initPos1(1) = -5.226; initPos1(2) = -10.226;
+    initPos1(0) = -9.773; initPos1(1) = -5.226; initPos1(2) = 10.226;
     initVel1(0) = 0.0; initVel1(1) = 0.0; initVel1(2) = 0.0; 
     initPos2(0) = -4; initPos2(1) = -11; initPos2(2) = 16;
     initVel2(0) = 0.0; initVel2(1) = 0.0; initVel2(2) = 0.0; 
