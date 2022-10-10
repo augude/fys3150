@@ -1,6 +1,6 @@
 #include "../include/PenningTrap.hpp"
 
-PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn, double fIn=0, double wIn=0){
+PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn, double fIn, double wIn){
     B0 = B0In;
     V0 = V0In;
     d = dIn;
@@ -10,7 +10,6 @@ PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Parti
     particles = particlesIn;
     //TODO add changes to t into the functins
     double t = 0;
-
 }
 
 void PenningTrap::addParticle(Particle pIn){
@@ -25,7 +24,7 @@ void PenningTrap::updateV0(double &V0,double w,double t,double f){
 arma::vec PenningTrap::electricField(arma::vec position){
     arma::vec E = arma::vec(3);
 
-    if (norm(position) < d){
+    if (norm(position) > d){
         E.zeros();
     } else {
         E(0) = position(0);
@@ -40,7 +39,7 @@ arma::vec PenningTrap::electricField(arma::vec position){
 arma::vec PenningTrap::magneticField(arma::vec position){
     arma::vec B = arma::vec(3);
 
-    if (norm(position) < d){
+    if (norm(position) > d){
         B.zeros();
     } else {
         B(0) = 0;
