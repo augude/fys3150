@@ -1,14 +1,14 @@
 #include "../include/PenningTrap.hpp"
 
-PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn){
+PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn, double fIn=0, double wIn=0){
     B0 = B0In;
     V0 = V0In;
     d = dIn;
+    f=fIn;
+    w=wIn;
+
     particles = particlesIn;
-    //TODO add w 
     //TODO add changes to t into the functins
-    double f =0;
-    double w=0; //dummy variable
     double t = 0;
 
 }
