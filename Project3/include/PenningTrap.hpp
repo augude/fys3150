@@ -24,7 +24,7 @@ class PenningTrap{
         void addParticle(Particle pIn);
 
         // Updates V0 according to current time
-        void updateV0(double &V0,double w,double t,double f);
+        void updateV0();
 
         // External electric field at point r=(x,y,z)
         arma::vec electricField(arma::vec position);
@@ -42,7 +42,7 @@ class PenningTrap{
         arma::vec totalForceParticles(int i);
 
         // The total force on particlei from both external fields and other particles
-        arma::vec totalForce(int i);
+        arma::vec totalForce(int i,bool coulombInteractions=true);
 
         // Evolve the system one time step (dt) using Forward Euler
         void evolveForwardEuler(double dt);

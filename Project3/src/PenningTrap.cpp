@@ -17,7 +17,7 @@ void PenningTrap::addParticle(Particle pIn){
     particles.push_back(pIn);
 }
 
-void PenningTrap::updateV0(double &V0,double w,double t,double f){
+void PenningTrap::updateV0(){
     V0 = V0*(1+f*cos(w*t));
 }
 
@@ -87,9 +87,14 @@ arma::vec PenningTrap::totalForceParticles(int i){
     return internalForce;
 }
 
-arma::vec PenningTrap::totalForce(int i){
-    arma::vec totalForce = totalForceExternal(i) + totalForceParticles(i);
-
+arma::vec PenningTrap::totalForce(int i,bool coulombInteractions){
+    arma::vec totalForce;
+    if(coulombInteractions){
+        totalForce = totalForceExternal(i) + totalForceParticles(i);
+    } else{
+        totalForce = totalForceExternal(i);
+    }
+    
     //std::cout << totalForceExternal(i) << std::endl;
     //std::cout << totalForceParticles(i) << std::endl;
 
