@@ -42,17 +42,17 @@ class PenningTrap{
         arma::vec totalForceParticles(int i);
 
         // The total force on particlei from both external fields and other particles
-        arma::vec totalForce(int i,bool coulombInteractions=true);
+        arma::vec totalForce(int i,bool coulombInteractions=false);
 
         // Evolve the system one time step (dt) using Forward Euler
         void evolveForwardEuler(double dt);
 
         // The total amount of particles remaining in the penning trap
-        double countProportionParticlesInside();
+        int countParticlesInside();
 
         // Evolve the system one time step (dt) using RK4
         void evolveRK4(double dt);
 
         //Evolves the system one time step (dt) based on the current time
-        void evolveRK4witht(double dt,bool coulombInteractions=true);
+        void evolveRK4witht(double dt,bool coulombInteractions=false);
 };
