@@ -48,7 +48,7 @@ class PenningTrap{
         void evolveForwardEuler(double dt);
 
         // The total amount of particles remaining in the penning trap
-        int countParticlesInside();
+        double countProportionParticlesInside();
 
         // Evolve the system one time step (dt) using RK4
         void evolveRK4(double dt);

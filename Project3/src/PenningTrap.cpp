@@ -101,13 +101,14 @@ arma::vec PenningTrap::totalForce(int i,bool coulombInteractions){
     return totalForce;
 }
 
-int PenningTrap::countParticlesInside(){
-    int nrInside=0;
+double PenningTrap::countProportionParticlesInside(){
+    double nrInside=0;
     for(Particle p : particles){
         if(norm(p.position)<d){
             nrInside+=1;
         }
     }
+    nrInside=nrInside/100;
     return nrInside;
 }
 

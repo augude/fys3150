@@ -228,11 +228,6 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
     int tN = T/tStepSize; //number of timesteps
     //w evolution parameter
     int wN=(wEnd-wStart)/wStepSize;
-
-    //init conditions
-    double x0 = d/2;
-    double z0 = d/2;
-    double vy0 = 10;
     //particle parameters
     double mass = 40.078;
     double charge = 1;
@@ -247,6 +242,8 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
         arma::vec initVel = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial velocity
         Trap.addParticle(Particle(charge, mass, initPos, initVel));
     }
+    //std::cout<<Trap.countParticlesInside();
+    //std::cout<<Trap.V0<<std::endl;
 
     //Performing the simulations:
     for (int i =0; i<wN;i++){
@@ -254,7 +251,8 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
             Trap.evolveRK4witht(tStepSize,coulombInteractions);
         }
         std::cout << scientificFormat(Trap.w);
-        std::cout << scientificFormat(Trap.countParticlesInside()/100);
+        double propParticles= Trap.countProportionParticlesInside();
+        std::cout << scientificFormat(propParticles);
         std::cout << "" << std::endl;
 
         //set new w value
