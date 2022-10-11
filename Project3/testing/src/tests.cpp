@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 
-
 void testPenningSetup(){
 
     double B0 = 9.51e1;
@@ -237,11 +236,20 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
 
     //Genereating particles with random initial position \wedge velocity
     //TODO/notetoself : add set_ssed_random() to set seed - think it makes it truly unpredictable
+    arma::arma_rng::set_seed_random();
     for(int i=0;i<nrParticles;i++){
         arma::vec initPos = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial position
         arma::vec initVel = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial velocity
         Trap.addParticle(Particle(charge, mass, initPos, initVel));
     }
+
+    for(int j=0;j<tN;j++){
+            std::cout<<"Initial position : "<<scientificFormat(Trap.particles.at(0).position)<< "Norm : "<<scientificFormat(norm(Trap.particles.at(0).position)) <<"  Initial velocity : "<<scientificFormat(Trap.particles.at(0).velocity)<<std::endl;
+            Trap.evolveRK4witht(tStepSize,coulombInteractions);
+        }
+
+    std::cout<<"Number left: "<<Trap.countProportionParticlesInside()<<std::endl;
+    /*
     //std::cout<<Trap.countParticlesInside();
     //std::cout<<Trap.V0<<std::endl;
 
@@ -258,5 +266,5 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
         //set new w value
         Trap.w+=wStepSize;
 
-    }
+    }*/
 }

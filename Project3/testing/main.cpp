@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
     }
     else if (testString =="comparefValue"){
         double f = atof(argv[2]);
-        comparefValue(f,10e-1,0.02,0.2,2.5,100,false);
+        comparefValue(f,1,0.02,0.2,2.5,1,false);
     }
     return 0;
 }
