@@ -220,8 +220,8 @@ void compareStepsize(double stepSize){
 void comparefValue(double f,double tStepSize,double wStepSize,double wStart,double wEnd, int nrParticles,bool coulombInteractions){
     //trap parameters
     double B0 = 9.65e1;
-    double d=5e2;
-    double V0=2.41250e5;
+    double d=500;
+    double V0=2.41e6;
 
     //time evolution parameter
     int T = 500; //end time
