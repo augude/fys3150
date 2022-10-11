@@ -120,7 +120,7 @@ void PenningTrap::evolveForwardEuler(double dt){
     arma::mat newVel(3, n);
 
     for (int i = 0; i < n; i++){
-        arma::vec force = totalForce(i)/particles.at(i).mass;
+        arma::vec force = totalForce(i,coulombInteractions)/particles.at(i).mass;
         //need to calculate change in position before change in velocity to 'aviod' Euler-Cromer
 
         newPos.col(i)=particles.at(i).position + dt*particles.at(i).velocity;
@@ -143,30 +143,36 @@ void PenningTrap::evolveRK4(double dt){
     for (int i = 0; i < n; i++){
         arma::vec posI = particles.at(i).position; //store pos at time i 
         arma::vec velI = particles.at(i).velocity; //store vel at time i
-
+        
         arma::vec k1vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k1pos = dt*particles.at(i).velocity;
-        newVel.col(i) = velI + 0.5*k1vel; //calculate midpoint using k1
-        newPos.col(i) = posI + 0.5*k1pos; //calculate midpoint using k1
+        particles.at(i).velocity = velI + 0.5*k1vel; //calculate midpoint using k1
+        particles.at(i).position = posI + 0.5*k1pos; //calculate midpoint using k1
         
         arma::vec k2vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k2pos = dt*particles.at(i).velocity;
-        newVel.col(i) = velI + 0.5*k2vel; //calculate midpoint using k2
-        newPos.col(i) = posI + 0.5*k2pos; //calculate midpoint using k2
+        particles.at(i).velocity = velI + 0.5*k2vel; //calculate midpoint using k2
+        particles.at(i).position = posI + 0.5*k2pos; //calculate midpoint using k2
         
         arma::vec k3vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k3pos = dt*particles.at(i).velocity;
-        newVel.col(i) = velI + k3vel; //calculate endpoint using k3
-        newPos.col(i) = posI + k3pos; //calculate endpoint using k3
-
+        particles.at(i).velocity = velI + k3vel; //calculate endpoint using k3
+        particles.at(i).position = posI + k3pos; //calculate endpoint using k3
+        
         arma::vec k4vel = dt*totalForce(i)/particles.at(i).mass;
         arma::vec k4pos = dt*particles.at(i).velocity;
         
-        newVel.col(i) = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
-        newPos.col(i) = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
-    }
+        particles.at(i).velocity = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
+        particles.at(i).position = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
+        
+        newVel.col(i) = particles.at(i).velocity; //store updated velocities
+        newPos.col(i) = particles.at(i).position; //store updated positions
+        particles.at(i).velocity = velI; //put particle back to start to calculate forces on the other particles 
+        particles.at(i).position = posI;
+        }
 
     for (int i = 0; i < n; i++){
+        //update all particles at the same time
         particles.at(i).velocity = newVel.col(i);
         particles.at(i).position = newPos.col(i);
     }
@@ -177,36 +183,40 @@ void PenningTrap::evolveRK4witht(double dt,bool coulombInteractions){
 
     arma::mat newPos(3, n);
     arma::mat newVel(3, n);
-    std::cout << "V0 : " << V0 << std::endl;
-    std::cout << "t : " << t << std::endl;
 
     for (int i = 0; i < n; i++){
         arma::vec posI = particles.at(i).position; //store pos at time i 
         arma::vec velI = particles.at(i).velocity; //store vel at time i
-
+        
         arma::vec k1vel = dt*totalForce(i,coulombInteractions)/particles.at(i).mass;
         arma::vec k1pos = dt*particles.at(i).velocity;
-        newVel.col(i) = velI + 0.5*k1vel; //calculate midpoint using k1
-        newPos.col(i) = posI + 0.5*k1pos; //calculate midpoint using k1
+        particles.at(i).velocity = velI + 0.5*k1vel; //calculate midpoint using k1
+        particles.at(i).position = posI + 0.5*k1pos; //calculate midpoint using k1
         
         arma::vec k2vel = dt*totalForce(i,coulombInteractions)/particles.at(i).mass;
         arma::vec k2pos = dt*particles.at(i).velocity;
-        newVel.col(i) = velI + 0.5*k2vel; //calculate midpoint using k2
-        newPos.col(i) = posI + 0.5*k2pos; //calculate midpoint using k2
+        particles.at(i).velocity = velI + 0.5*k2vel; //calculate midpoint using k2
+        particles.at(i).position = posI + 0.5*k2pos; //calculate midpoint using k2
         
         arma::vec k3vel = dt*totalForce(i,coulombInteractions)/particles.at(i).mass;
         arma::vec k3pos = dt*particles.at(i).velocity;
-        newVel.col(i) = velI + k3vel; //calculate endpoint using k3
-        newPos.col(i) = posI + k3pos; //calculate endpoint using k3
-
+        particles.at(i).velocity = velI + k3vel; //calculate endpoint using k3
+        particles.at(i).position = posI + k3pos; //calculate endpoint using k3
+        
         arma::vec k4vel = dt*totalForce(i,coulombInteractions)/particles.at(i).mass;
         arma::vec k4pos = dt*particles.at(i).velocity;
         
-        newVel.col(i) = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
-        newPos.col(i) = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
-    }
+        particles.at(i).velocity = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
+        particles.at(i).position = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
+        
+        newVel.col(i) = particles.at(i).velocity; //store updated velocities
+        newPos.col(i) = particles.at(i).position; //store updated positions
+        particles.at(i).velocity = velI; //put particle back to start to calculate forces on the other particles 
+        particles.at(i).position = posI;
+        }
 
     for (int i = 0; i < n; i++){
+        //update all particles at the same time
         particles.at(i).velocity = newVel.col(i);
         particles.at(i).position = newPos.col(i);
     }
