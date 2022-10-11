@@ -19,3 +19,8 @@ compareStepsize:
 	for number in 1e-1 1e-2 1e-3 1e-4 1e-5 ; do \
 		g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "CompareStepsize" $$number > $$number.txt ; \
 	done
+
+comparefValue:
+	for f in 0.1 0.4 0.7; do \
+		g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "comparefValue" $$f > $$f.txt ; \
+	done
