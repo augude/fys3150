@@ -216,3 +216,49 @@ void compareStepsize(double stepSize){
         TrapRK4.evolveRK4(stepSize);
     }   
 }
+
+void comparefValue(double f,double tStepSize,double wStepSize,double wStart,double wEnd, int nrParticles,bool coulombInteractions){
+    //trap parameters
+    double B0 = 9.65e1;
+    double d=5e2;
+    double V0=2.41250e5;
+
+    //time evolution parameter
+    int T = 500; //end time
+    int tN = T/tStepSize; //number of timesteps
+    //w evolution parameter
+    int wN=(wEnd-wStart)/wStepSize;
+
+    //init conditions
+    double x0 = d/2;
+    double z0 = d/2;
+    double vy0 = 10;
+    //particle parameters
+    double mass = 40.078;
+    double charge = 1;
+    //Initializing PenningTrap
+    std::vector<Particle> particles;
+    PenningTrap Trap = PenningTrap(B0, V0, d, particles,f,wStart);
+
+    //Genereating particles with random initial position \wedge velocity
+    //TODO/notetoself : add set_ssed_random() to set seed - think it makes it truly unpredictable
+    for(int i=0;i<nrParticles;i++){
+        arma::vec initPos = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial position
+        arma::vec initVel = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial velocity
+        Trap.addParticle(Particle(charge, mass, initPos, initVel));
+    }
+
+    //Performing the simulations:
+    for (int i =0; i<wN;i++){
+        for(int j=0;j<tN;j++){
+            Trap.evolveRK4witht(tStepSize,coulombInteractions);
+        }
+        std::cout << scientificFormat(Trap.w);
+        std::cout << scientificFormat(Trap.countParticlesInside()/100);
+        std::cout << "" << std::endl;
+
+        //set new w value
+        Trap.w+=wStepSize;
+
+    }
+}
