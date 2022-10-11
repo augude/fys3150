@@ -8,7 +8,6 @@ PenningTrap::PenningTrap(double B0In, double V0In, double dIn, std::vector<Parti
     w=wIn;
 
     particles = particlesIn;
-    //TODO add changes to t into the functins
     double t = 0;
 }
 
@@ -101,14 +100,13 @@ arma::vec PenningTrap::totalForce(int i,bool coulombInteractions){
     return totalForce;
 }
 
-double PenningTrap::countProportionParticlesInside(){
-    double nrInside=0;
+int PenningTrap::countParticlesInside(){
+    int nrInside=0;
     for(Particle p : particles){
         if(norm(p.position)<d){
             nrInside+=1;
         }
     }
-    nrInside=nrInside/100;
     return nrInside;
 }
 
@@ -120,7 +118,7 @@ void PenningTrap::evolveForwardEuler(double dt){
     arma::mat newVel(3, n);
 
     for (int i = 0; i < n; i++){
-        arma::vec force = totalForce(i,coulombInteractions)/particles.at(i).mass;
+        arma::vec force = totalForce(i)/particles.at(i).mass;
         //need to calculate change in position before change in velocity to 'aviod' Euler-Cromer
 
         newPos.col(i)=particles.at(i).position + dt*particles.at(i).velocity;
