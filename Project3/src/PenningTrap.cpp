@@ -177,8 +177,8 @@ void PenningTrap::evolveRK4witht(double dt,bool coulombInteractions){
 
     arma::mat newPos(3, n);
     arma::mat newVel(3, n);
-    //std::cout << V0 << std::endl;
-    //std::cout << t << std::endl
+    std::cout << "V0 : " << V0 << std::endl;
+    std::cout << "t : " << t << std::endl;
 
     for (int i = 0; i < n; i++){
         arma::vec posI = particles.at(i).position; //store pos at time i 
