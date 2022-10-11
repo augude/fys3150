@@ -18,7 +18,7 @@ class PenningTrap{
 
         std::vector<Particle> particles;
 
-        PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn,double fIn=0, double wIn=0);
+        PenningTrap(double B0In, double V0In, double dIn, std::vector<Particle> particlesIn, double fIn=0, double wIn=0);
 
         // Add a particle to the trap
         void addParticle(Particle pIn);
@@ -47,9 +47,12 @@ class PenningTrap{
         // Evolve the system one time step (dt) using Forward Euler
         void evolveForwardEuler(double dt);
 
+        // The total amount of particles remaining in the penning trap
+        int countParticlesInside();
+
         // Evolve the system one time step (dt) using RK4
         void evolveRK4(double dt);
 
-        //Evolves the system one time step and updates total time
-        void evolveRK4witht(double dt,double &t);
+        //Evolves the system one time step (dt) based on the current time
+        void evolveRK4witht(double dt);
 };

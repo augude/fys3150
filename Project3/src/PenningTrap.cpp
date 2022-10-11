@@ -96,6 +96,15 @@ arma::vec PenningTrap::totalForce(int i){
     return totalForce;
 }
 
+int PenningTrap::countParticlesInside(){
+    int nrInside=0;
+    for(Particle p : particles){
+        if(norm(p.position)<d){
+            nrInside+=1;
+        }
+    }
+}
+
 void PenningTrap::evolveForwardEuler(double dt){
     int n = size(particles);
 
@@ -156,7 +165,7 @@ void PenningTrap::evolveRK4(double dt){
     }
 }
 
-void PenningTrap::evolveRK4witht(double dt,double &t){
+void PenningTrap::evolveRK4witht(double dt){
     int n = size(particles);
 
     arma::mat newPos(3, n);
