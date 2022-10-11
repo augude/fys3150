@@ -54,5 +54,5 @@ class PenningTrap{
         void evolveRK4(double dt);
 
         //Evolves the system one time step (dt) based on the current time
-        void evolveRK4witht(double dt);
+        void evolveRK4witht(double dt,bool coulombInteractions=true);
 };
