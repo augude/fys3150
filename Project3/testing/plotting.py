@@ -291,3 +291,20 @@ plt.show()
     
 
 # %%
+import numpy as np; import matplotlib.pyplot as plt 
+import seaborn as sns
+import tikzplotlib
+
+files = ['0.1.txt','0.4.txt','0.7.txt']
+fig, axs = plt.subplots(nrows = 3, ncols = 1, figsize = (12, 10))
+
+for index, file in enumerate(files):
+    data = np.loadtxt(file)
+    w = data[:, 0]
+    particlesin=data[:,1]
+
+    axs[index].plot(w,particlesin)
+
+plt.show()
+
+# %%
