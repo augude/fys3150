@@ -224,7 +224,7 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
     double V0=2.41e6;
 
     //time evolution parameter
-    int T = 100; //end time
+    int T = 500; //end time
     int tN = T/tStepSize; //number of timesteps
 
     //w evolution parameter
