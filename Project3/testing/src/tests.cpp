@@ -239,7 +239,7 @@ void comparefValue(double f,double tStepSize,double wStepSize,double wStart,doub
     PenningTrap Trap = PenningTrap(B0, V0, d, particles,f,wStart);
     
     //Generating particles
-    arma::arma_rng::set_seed_random();
+    //arma::arma_rng::set_seed_random();
     for(int i=0;i<100;i++){
             arma::vec initPos = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial position
             arma::vec initVel = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial velocity
