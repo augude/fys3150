@@ -21,6 +21,6 @@ compareStepsize:
 	done
 
 comparefValue:
-	for f in 0.1; do \
+	for f in 0.1 0.4 0.7; do \
 		g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "comparefValue" $$f > $$f.txt ; \
 	done

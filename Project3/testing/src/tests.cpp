@@ -108,6 +108,7 @@ void testOneParticleRK4(){
         std::cout << scientificFormat(t);
         Trap.particles.at(0).printCurrentPos();
         Trap.particles.at(0).printCurrentVel();
+        std::cout <<"   " <<Trap.countParticlesInside();
         std::cout << "" << std::endl;
         Trap.evolveRK4(dt);
     }   
@@ -216,55 +217,50 @@ void compareStepsize(double stepSize){
     }   
 }
 
-void comparefValue(double f,double tStepSize,double wStepSize,double wStart,double wEnd, int nrParticles,bool coulombInteractions){
+void comparefValue(double f,double tStepSize,double wStepSize,double wStart,double wEnd,bool coulombInteractions){
     //trap parameters
     double B0 = 9.65e1;
     double d=500;
     double V0=2.41e6;
 
     //time evolution parameter
-    int T = 500; //end time
+    int T = 100; //end time
     int tN = T/tStepSize; //number of timesteps
+
     //w evolution parameter
     int wN=(wEnd-wStart)/wStepSize;
+
     //particle parameters
     double mass = 40.078;
     double charge = 1;
+
     //Initializing PenningTrap
     std::vector<Particle> particles;
     PenningTrap Trap = PenningTrap(B0, V0, d, particles,f,wStart);
-
-    //Genereating particles with random initial position \wedge velocity
-    //TODO/notetoself : add set_ssed_random() to set seed - think it makes it truly unpredictable
+    
+    //Generating particles
     arma::arma_rng::set_seed_random();
-    for(int i=0;i<nrParticles;i++){
-        arma::vec initPos = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial position
-        arma::vec initVel = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial velocity
-        Trap.addParticle(Particle(charge, mass, initPos, initVel));
-    }
-
-    for(int j=0;j<tN;j++){
-            std::cout<<"Initial position : "<<scientificFormat(Trap.particles.at(0).position)<< "Norm : "<<scientificFormat(norm(Trap.particles.at(0).position)) <<"  Initial velocity : "<<scientificFormat(Trap.particles.at(0).velocity)<<std::endl;
-            Trap.evolveRK4witht(tStepSize,coulombInteractions);
+    for(int i=0;i<100;i++){
+            arma::vec initPos = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial position
+            arma::vec initVel = arma::vec(3).randn() * 0.1 * Trap.d;  // random initial velocity
+            particles.push_back(Particle(charge, mass, initPos, initVel));
         }
 
-    std::cout<<"Number left: "<<Trap.countProportionParticlesInside()<<std::endl;
-    /*
-    //std::cout<<Trap.countParticlesInside();
-    //std::cout<<Trap.V0<<std::endl;
-
+    Trap.particles=particles;
     //Performing the simulations:
     for (int i =0; i<wN;i++){
         for(int j=0;j<tN;j++){
-            Trap.evolveRK4witht(tStepSize,coulombInteractions);
+            Trap.evolveRK4witht(tStepSize);
         }
         std::cout << scientificFormat(Trap.w);
-        double propParticles= Trap.countProportionParticlesInside();
-        std::cout << scientificFormat(propParticles);
+        std::cout <<"   " <<Trap.countParticlesInside();
         std::cout << "" << std::endl;
 
         //set new w value
         Trap.w+=wStepSize;
-
-    }*/
+        //Reset trap:
+        Trap.particles=particles;
+        Trap.t=0;
+        Trap.V0=V0;
+    }
 }

@@ -27,7 +27,8 @@ int main(int argc, char* argv[]){
     }
     else if (testString =="comparefValue"){
         double f = atof(argv[2]);
-        comparefValue(f,1,0.02,0.2,2.5,1,false);
+        //This can vary
+        comparefValue(f,0.1);
     }
     return 0;
 }
