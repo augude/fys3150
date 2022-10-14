@@ -19,3 +19,6 @@ compareStepsize:
 	for number in 4000 8000 16000 32000 ; do \
 		g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "CompareStepsize" $$number > $$number.txt ; \
 	done
+
+fractionWithin: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe -O2 && ./tests.exe "fractionWithin" > fractionWithin.txt	

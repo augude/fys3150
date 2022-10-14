@@ -1,6 +1,4 @@
 #%%
-
-import re
 import numpy as np; import matplotlib.pyplot as plt 
 import seaborn as sns
 import tikzplotlib
@@ -321,3 +319,21 @@ rErrFE = rErrFE/3
 
 print(rErrRK4)
 print(rErrFE)
+
+#%%
+
+data = np.loadtxt('fractionWithin.txt')
+freq = np.linspace(0.2, 2.5, len(data[0, :]))
+f = [0.1, 0.4, 0.7]
+fig, axs = plt.subplots(1, 1, figsize = (14, 10))
+for index, value in enumerate(f):
+    numberWithin = data[index, :]
+    axs.plot(freq, numberWithin, label = f'f = {f[index]}')
+    axs.set_xlabel(r'$\omega_V$')
+    axs.set_ylabel(r'Number of particles trapped')
+lgd = axs.legend(loc = 'upper center', ncol = 3, fancybox = True, 
+           bbox_to_anchor = (0.5, 1.1))
+fig.tight_layout()
+plt.show()
+
+# %%

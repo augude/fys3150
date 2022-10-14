@@ -26,7 +26,7 @@ void testPenningSetup(){
     arma::vec pos(3);
     arma::vec eField(3);
     PenningTrap trap = PenningTrap(B0, V0, d, parts);
-    int N = 100;
+    int N = 10;
     for (int z = 0; z < N; z++){
         for (int y = 0; y < N; y++){
             double zpos = 2*d*z/N - d;
@@ -36,9 +36,9 @@ void testPenningSetup(){
             pos(2) = zpos;
             double V = V0/(2*d*d)*(2*zpos*zpos - ypos*ypos - 0*0);
             eField = trap.electricField(pos);  
-            ofile << scientificFormat(z) << scientificFormat(y);
-            ofile << scientificFormat(pos); 
-            ofile << scientificFormat(eField) << scientificFormat(V) << std::endl;
+            std::cout << scientificFormat(z) << scientificFormat(y);
+            std::cout << scientificFormat(pos); 
+            std::cout << scientificFormat(eField) << scientificFormat(V) << std::endl;
         }
     }
     ofile.close();
@@ -215,4 +215,32 @@ void compareStepsize(int N){
         TrapFE.evolveForwardEuler(stepSize);
         TrapRK4.evolveRK4(stepSize);
     }   
+}
+
+
+arma::vec fractionWithin(double f){
+    //trap parameters
+    double B0 = 9.65e1;
+    double V0 = 2.41e6;
+    double d = 500;
+    int numberParticles = 100;
+    //evolution parameter
+    double T = 500.0; //end time
+    double stepSize = 0.01; //number of timesteps
+    int numberSteps = T/stepSize;
+    std::vector<Particle> particles;
+    arma::vec omega = arma::linspace(0.2, 2.5, 115); 
+    arma::vec fraction = arma::vec(omega.size());
+    int index = 0;
+    for (double o : omega){
+        PenningTrap Trap = PenningTrap(B0, V0, d, particles, f, o);
+        Trap.fillTrap(numberParticles); //fill trap with 100 particles
+        for (int i = 0; i < numberSteps; i++){
+            double time = stepSize*i;
+            Trap.evolveRK4(stepSize, time, false);
+        }
+        fraction(index) = Trap.numberWithin();
+        index += 1;
+    }
+    return fraction;
 }

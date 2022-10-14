@@ -1,4 +1,5 @@
 #pragma once
+#include <armadillo>
 
 //testing that the electric field looks as expected
 void testPenningSetup();
@@ -15,3 +16,5 @@ void testDoubleSetup(bool internalForces = true);
 //calculate time evolution for different stepsizes using both FE and RK4
 void compareStepsize(int N);
 
+//calculate the fraction of particles that are trapped as function of omega, coloumb-forces are switched off
+arma::vec fractionWithin(double f);

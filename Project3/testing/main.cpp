@@ -25,5 +25,11 @@ int main(int argc, char* argv[]){
         double stepSize = atof(argv[2]);
         compareStepsize(stepSize);
     }
+    else if (testString == "fractionWithin"){
+        for (double f : {0.1, 0.4, 0.7}){
+            arma::vec fraction = fractionWithin(f);
+            std::cout << scientificFormat(fraction) << std::endl;
+        }
+    }
     return 0;
 }
