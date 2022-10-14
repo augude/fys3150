@@ -1,5 +1,6 @@
 #%%
 
+import re
 import numpy as np; import matplotlib.pyplot as plt 
 import seaborn as sns
 import tikzplotlib
@@ -51,11 +52,15 @@ for filename in files:
     pos = test[:, 1:4]
     vel = test[:, 4:]
 
-    q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
+    q = 1
+    V0 = 2.41e6
+    B0 = 9.65e1
+    m = 40.078
+    d = 500
     wz = np.sqrt(2*q*V0/(m*d**2)) 
     w0 = q*B0/m
 
-    v0 = vel[0, 2]; x0 = pos[0, 0]; z0 = pos[0, 2]
+    v0 = vel[0, 1]; x0 = pos[0, 0]; z0 = pos[0, 0]
 
     wp = (w0 + np.sqrt(w0**2 - 2*wz**2))/2
     wm = (w0 - np.sqrt(w0**2 - 2*wz**2))/2
@@ -100,7 +105,6 @@ for filename in files:
     )
     plt.show()
     
-
 # %%
 files = ['testDoubleSetupWithInternal.txt', 'testDoubleSetupWithoutInternal.txt']
 
@@ -244,50 +248,76 @@ for filename in files:
     
 
 # %%
-files = ['1e-1.txt', '1e-2.txt', '1e-3.txt', '1e-4.txt'] #, '1e-5.txt']
-fig, axs = plt.subplots(nrows = 2, ncols = 1, figsize = (12, 10))
+files = ['4000.txt', '8000.txt', '16000.txt', '32000.txt']
+fig, axs = plt.subplots(nrows = 2, ncols = 1, figsize = (15, 10))
+deltaMaxFE = np.zeros(len(files))
+deltaMaxRK4 = np.zeros(len(files))
+h = np.array([50/4e3, 50/8e3, 50/16e3, 50/32e3])
+
 for index, file in enumerate(files):
     data = np.loadtxt(file)
     t = data[:, 0]
     posFE = data[:, 1:4]
     velFE = data[:, 4:7]
-    posRK4 = data[:, 7:11]
-    velRK4 = data[11:14]
+    posRK4 = data[:, 7:10]
+    velRK4 = data[:, 10:13]
     
-    z0 = posFE[0, 2]
-    q = 1; V0 = 9.65e8; B0 = 9.65e1; m = 40.078; d = 1e4
+    q = 1
+    V0 = 2.41e6
+    B0 = 9.65e1
+    m = 40.078
+    d = 500
     wz = np.sqrt(2*q*V0/(m*d**2)) 
-    
+    w0 = q*B0/m
+
+    v0 = vel[0, 1]; x0 = pos[0, 0]; z0 = pos[0, 2]
+
+    wp = (w0 + np.sqrt(w0**2 - 2*wz**2))/2
+    wm = (w0 - np.sqrt(w0**2 - 2*wz**2))/2
+
+    Ap = (v0 + wm*x0)/(wm - wp)
+    Am = -(v0 + wp*x0)/(wm - wp)
+
+    f = Ap*np.exp(-1j*wp*t) + Am*np.exp(-1j*wm*t)
+    xAna = np.real(f)
+    yAna = np.imag(f)
     zAna = z0*np.cos(wz*t)
 
-    relErrorFE = np.abs((posFE[:, 2] - zAna))/np.abs(zAna)
-    relErrorRK4 = np.abs((posRK4[:, 2] - zAna))/np.abs(zAna)
+    rAna = np.transpose(np.array([xAna, yAna, zAna]))
+    deltaFE = np.linalg.norm(rAna - posFE, axis = 1)
+    deltaRK4 = np.linalg.norm(rAna - posRK4, axis = 1)
     
-    axs[0].semilogy(t, relErrorFE, label = f'10^-{index + 1}')
-    axs[1].semilogy(t, relErrorRK4, label = f'10^-{index + 1}')
+    deltaMaxFE[index] = np.max(deltaFE)
+    deltaMaxRK4[index] = np.max(deltaRK4)
+    
+    relErrorFE = deltaFE/np.linalg.norm(rAna, axis = 1)
+    relErrorRK4 = deltaRK4/np.linalg.norm(rAna, axis = 1)
+        
+    axs[0].semilogy(t, relErrorFE, label = f'N = 1000*2^{index + 2}')
+    axs[1].semilogy(t, relErrorRK4, label = f'N = 1000*2^{index + 2}')
     
 axs[0].set_xlabel(r't $[\mu s]$')
 axs[0].set_ylabel(r'$\log \epsilon$')
-axs[0].text(x = 0, y = 10**(-1), s = 'FE')
+axs[0].text(x = 10, y = 10**(-13), s = 'FE')
 axs[1].set_xlabel(r't $[\mu s]$')
 axs[1].set_ylabel(r'$\log \epsilon$')
-axs[1].text(x = 0, y = 10**(-5), s = 'RK4')
+axs[1].text(x = 10, y = 10**(-14), s = 'RK4')
 
 lgd = axs[0].legend(loc = 'upper center', ncol = 5, fancybox = True, 
            bbox_to_anchor = (0.5, 1.35))
 fig.tight_layout()
-tikzplotlib.clean_figure()
-tikzplotlib.save(
-f"relError.tex",
-extra_axis_parameters=[
-    "title style={align=center}",
-    "xmajorticks=true",
-    "ymajorticks=true",
-    "mark options={mark size=2.5pt, line width=1.5pt}",
-    ],
-    strict=True,
-)
 plt.show()
     
 
 # %%
+rErrRK4 = 0
+rErrFE = 0
+for i in range(2, 4):
+    rErrRK4 += np.log(deltaMaxRK4[i]/deltaMaxRK4[i-1])/np.log(h[i]/h[i-1])
+    rErrFE += np.log(deltaMaxFE[i]/deltaMaxFE[i-1])/np.log(h[i]/h[i-1])
+
+rErrRK4 = rErrRK4/3
+rErrFE = rErrFE/3
+
+print(rErrRK4)
+print(rErrFE)

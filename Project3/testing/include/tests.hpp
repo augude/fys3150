@@ -13,5 +13,5 @@ void testOneParticleRK4();
 void testDoubleSetup(bool internalForces = true);
 
 //calculate time evolution for different stepsizes using both FE and RK4
-void compareStepsize(double stepSize);
+void compareStepsize(int N);
 

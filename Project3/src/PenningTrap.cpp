@@ -31,7 +31,7 @@ arma::vec PenningTrap::magneticField(arma::vec position){
 
 arma::vec PenningTrap::forceParticle(int i, int j){
 
-    //throw an assertion if you try to calculate the force from the particle itself 
+    //thcol an assertion if you try to calculate the force from the particle itself 
     assert(i != j);
 
     Particle particleOn = particles.at(i);
@@ -69,9 +69,6 @@ arma::vec PenningTrap::totalForceParticles(int i){
 arma::vec PenningTrap::totalForce(int i){
     arma::vec totalForce = totalForceExternal(i) + totalForceParticles(i);
 
-    //std::cout << totalForceExternal(i) << std::endl;
-    //std::cout << totalForceParticles(i) << std::endl;
-
     return totalForce;
 }
 
@@ -86,13 +83,13 @@ void PenningTrap::evolveForwardEuler(double dt){
         arma::vec force = totalForce(i)/particles.at(i).mass;
         //need to calculate change in position before change in velocity to 'aviod' Euler-Cromer
 
-        newPos.col(i)=particles.at(i).position + dt*particles.at(i).velocity;
-        newVel.col(i)=particles.at(i).velocity + dt*force;
+        newPos.col(i) = particles.at(i).position + dt*particles.at(i).velocity;
+        newVel.col(i) = particles.at(i).velocity + dt*force;
     }
 
     for (int i = 0; i < n; i++){
-        particles.at(i).position=newPos.col(i);
-        particles.at(i).velocity=newVel.col(i);
+        particles.at(i).position = newPos.col(i);
+        particles.at(i).velocity = newVel.col(i);
     }
 
 }
@@ -100,43 +97,46 @@ void PenningTrap::evolveForwardEuler(double dt){
 void PenningTrap::evolveRK4(double dt){
     int n = size(particles);
 
-    arma::mat newPos(3, n);
-    arma::mat newVel(3, n);
+    arma::mat posI(3, n); //to store initial pos
+    arma::mat velI(3, n); //to store initial vel
 
+    arma::mat k1vel(3, n); //to store k's
+    arma::mat k1pos(3, n);
+    arma::mat k2vel(3, n);
+    arma::mat k2pos(3, n);
+    arma::mat k3vel(3, n);
+    arma::mat k3pos(3, n);
+    arma::mat k4vel(3, n);
+    arma::mat k4pos(3, n);
+    //update all particles using k1
     for (int i = 0; i < n; i++){
-        arma::vec posI = particles.at(i).position; //store pos at time i 
-        arma::vec velI = particles.at(i).velocity; //store vel at time i
+        posI.col(i) = particles.at(i).position; //store old initial positions
+        velI.col(i) = particles.at(i).velocity; //store old initial velocities
+        k1vel.col(i) = totalForce(i)/particles.at(i).mass;
+        k1pos.col(i) = particles.at(i).velocity;
+        particles.at(i).velocity = velI.col(i) + 0.5*dt*k1vel.col(i); //calculate midpoint using k1
+        particles.at(i).position = posI.col(i) + 0.5*dt*k1pos.col(i); //calculate midpoint using k1
         
-        arma::vec k1vel = dt*totalForce(i)/particles.at(i).mass;
-        arma::vec k1pos = dt*particles.at(i).velocity;
-        particles.at(i).velocity = velI + 0.5*k1vel; //calculate midpoint using k1
-        particles.at(i).position = posI + 0.5*k1pos; //calculate midpoint using k1
-        
-        arma::vec k2vel = dt*totalForce(i)/particles.at(i).mass;
-        arma::vec k2pos = dt*particles.at(i).velocity;
-        particles.at(i).velocity = velI + 0.5*k2vel; //calculate midpoint using k2
-        particles.at(i).position = posI + 0.5*k2pos; //calculate midpoint using k2
-        
-        arma::vec k3vel = dt*totalForce(i)/particles.at(i).mass;
-        arma::vec k3pos = dt*particles.at(i).velocity;
-        particles.at(i).velocity = velI + k3vel; //calculate endpoint using k3
-        particles.at(i).position = posI + k3pos; //calculate endpoint using k3
-        
-        arma::vec k4vel = dt*totalForce(i)/particles.at(i).mass;
-        arma::vec k4pos = dt*particles.at(i).velocity;
-        
-        particles.at(i).velocity = velI + 1.0/6*(k1vel + 2*k2vel + 2*k3vel + k4vel); //calculate endpoint using weighted sum
-        particles.at(i).position = posI + 1.0/6*(k1pos + 2*k2pos + 2*k3pos + k4pos); //calculate endpoint using weighted sum
-        
-        newVel.col(i) = particles.at(i).velocity; //store updated velocities
-        newPos.col(i) = particles.at(i).position; //store updated positions
-        particles.at(i).velocity = velI; //put particle back to start to calculate forces on the other particles 
-        particles.at(i).position = posI;
-        }
-
-    for (int i = 0; i < n; i++){
-        //update all particles at the same time
-        particles.at(i).velocity = newVel.col(i);
-        particles.at(i).position = newPos.col(i);
     }
+    //update all particles using k2
+    for (int i = 0; i < n; i++){
+        k2vel.col(i) = totalForce(i)/particles.at(i).mass;
+        k2pos.col(i) = particles.at(i).velocity;
+        particles.at(i).velocity = velI.col(i) + 0.5*dt*k2vel.col(i); //calculate midpoint using k2
+        particles.at(i).position = posI.col(i) + 0.5*dt*k2pos.col(i); //calculate midpoint using k2
+    }
+    //update all particles using k3
+    for (int i = 0; i < n; i++){
+        k3vel.col(i) = totalForce(i)/particles.at(i).mass;
+        k3pos.col(i) = particles.at(i).velocity;
+        particles.at(i).velocity = velI.col(i) + dt*k3vel.col(i); //calculate endpoint using k3
+        particles.at(i).position = posI.col(i) + dt*k3pos.col(i); //calculate endpoint using k3
+    } 
+    //update all particles using weigthed sum
+    for (int i = 0; i < n; i++){
+        k4vel.col(i) = totalForce(i)/particles.at(i).mass;
+        k4pos.col(i) = particles.at(i).velocity;
+        particles.at(i).velocity = velI.col(i) + dt/6*(k1vel.col(i) + 2*k2vel.col(i) + 2*k3vel.col(i) + k4vel.col(i)); //calculate endpoint using weigthed sum
+        particles.at(i).position = posI.col(i) + dt/6*(k1pos.col(i) + 2*k2pos.col(i) + 2*k3pos.col(i) + k4pos.col(i)); //calculate endpoint using weigthed sum
+    }   
 }

@@ -1,4 +1,4 @@
-all: testPenningSetup testOneParticleFE testOneParticleRK4 testDoubleSetupWithInternal testDoubleSetupWithoutInternal
+all: testPenningSetup testOneParticleFE testOneParticleRK4 testDoubleSetupWithInternal testDoubleSetupWithoutInternal compareStepsize
 
 testPenningSetup: 
 	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "PenningSetup" > ElectricField.txt	
@@ -16,6 +16,6 @@ testDoubleSetupWithoutInternal:
 	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "DoubleSetupWithoutInternal" > testDoubleSetupWithoutInternal.txt	
 
 compareStepsize:
-	for number in 1e-1 1e-2 1e-3 1e-4 1e-5 ; do \
+	for number in 4000 8000 16000 32000 ; do \
 		g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "CompareStepsize" $$number > $$number.txt ; \
 	done
