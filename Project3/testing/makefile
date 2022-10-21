@@ -1,4 +1,4 @@
-all: testPenningSetup testOneParticleFE testOneParticleRK4 testDoubleSetupWithInternal testDoubleSetupWithoutInternal compareStepsize
+all: testPenningSetup testOneParticleFE testOneParticleRK4 testDoubleSetupWithInternal testDoubleSetupWithoutInternal compareStepsize fractionWithin fractionWithinZoom
 
 testPenningSetup: 
 	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe  && ./tests.exe "PenningSetup" > ElectricField.txt	
@@ -22,3 +22,6 @@ compareStepsize:
 
 fractionWithin: 
 	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe -O2 && ./tests.exe "fractionWithin" > fractionWithin.txt	
+
+fractionWithinZoom: 
+	g++ main.cpp src/tests.cpp ../../Project2/src/utils.cpp ../src/PenningTrap.cpp ../src/Particle.cpp -I include/ -larmadillo -o tests.exe -O2 && ./tests.exe "fractionWithinZoom" > fractionWithinZoom.txt	

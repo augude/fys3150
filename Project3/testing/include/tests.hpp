@@ -18,3 +18,6 @@ void compareStepsize(int N);
 
 //calculate the fraction of particles that are trapped as function of omega, coloumb-forces are switched off
 arma::vec fractionWithin(double f);
+
+//calculate the fraction of particles that are trapped as function of omega zoomed in on one frequency. Option to turn coloumb-forces on/off
+arma::vec fractionWithinZoom(bool internal);

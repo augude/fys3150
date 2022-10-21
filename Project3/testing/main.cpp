@@ -31,5 +31,11 @@ int main(int argc, char* argv[]){
             std::cout << scientificFormat(fraction) << std::endl;
         }
     }
+    else if (testString == "fractionWithinZoom"){
+        arma::vec fractionWithoutCouloumb = fractionWithinZoom(false);
+        std::cout << scientificFormat(fractionWithoutCouloumb) << std::endl;
+        arma::vec fractionWithCouloumb = fractionWithinZoom(true);
+        std::cout << scientificFormat(fractionWithCouloumb) << std::endl;
+    }
     return 0;
 }

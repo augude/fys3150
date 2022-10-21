@@ -3,7 +3,7 @@
 #include "../../include/Particle.hpp"
 #include <fstream>
 #include <string>
-
+#include <time.h>
 
 void testPenningSetup(){
 
@@ -20,9 +20,6 @@ void testPenningSetup(){
 
     std::vector<Particle> parts = {part};
     std::string filename = "ElectricField.txt";
-    std::ofstream ofile;
-    ofile.open(filename);
-
     arma::vec pos(3);
     arma::vec eField(3);
     PenningTrap trap = PenningTrap(B0, V0, d, parts);
@@ -41,7 +38,6 @@ void testPenningSetup(){
             std::cout << scientificFormat(eField) << scientificFormat(V) << std::endl;
         }
     }
-    ofile.close();
 }
 
 void testOneParticleFE(){
@@ -120,7 +116,7 @@ void testDoubleSetup(bool internalForces = true){
     double V0 = 2.41e6;
     double d = 500;
     //evolution parameters
-    double dt = 0.01; //microseconds
+    double dt = 0.001; //microseconds
     int T = 50; //end time
     int N = T/dt; //number of timesteps
     //init conditions, must have different init pos for the particles to avoid infinite Coulomb-forces
@@ -243,4 +239,36 @@ arma::vec fractionWithin(double f){
         index += 1;
     }
     return fraction;
+}
+
+arma::vec fractionWithinZoom(bool internal){
+    //trap parameters
+    double B0 = 9.65e1;
+    double V0 = 2.41e6;
+    double d = 500;
+    double f = 0.7;
+    int numberParticles = 100;
+    //evolution parameter
+    double T = 500.0; //end time
+    double stepSize = 0.01; //number of timesteps
+    int numberSteps = T/stepSize;
+    std::vector<Particle> particles;
+    arma::vec omega = arma::linspace(0.4, 0.5, 20); 
+    arma::vec fraction = arma::vec(omega.size());
+    int index = 0;
+    for (double o : omega){
+        PenningTrap Trap = PenningTrap(B0, V0, d, particles, f, o);
+        Trap.fillTrap(numberParticles); //fill trap with 100 particles
+        clock_t t1 = clock();
+        for (int i = 0; i < numberSteps; i++){
+            double time = stepSize*i;
+            Trap.evolveRK4(stepSize, time, internal);
+        }
+        clock_t t2 = clock();
+        std::cout << "Iteration " << index +1 << " of " << omega.size() << " used " << ((double) (t2 - t1)) / CLOCKS_PER_SEC << " seconds" << std::endl;
+        fraction(index) = Trap.numberWithin();
+        index += 1;
+    }
+    return fraction;
+
 }
