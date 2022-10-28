@@ -21,6 +21,7 @@ Lattice::Lattice(int N_, double T_, bool ordered){
         }
         spins = lattice;
     }
+    
 }
 
 vec Lattice::energyMagnetization(){
@@ -35,4 +36,14 @@ vec Lattice::energyMagnetization(){
         }
     }
     return EM;
+}
+
+int Lattice::energyij(int i, int j){
+    int E = 0;
+    E -= spins(i, j)*spins(i, (j + 1) % N); //bound to neighbour to the right
+    E -= spins(i, j)*spins(i, (j - 1) % N); //bound to neighbour to the ledt
+    E -= spins(i, j)*spins((i + 1) % N, j); //bound to neighbour above 
+    E -= spins(i, j)*spins((i - 1) % N, j); //bound to neighbour below
+
+    return E;
 }

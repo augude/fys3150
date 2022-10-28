@@ -1,7 +1,7 @@
 #include "include/lattice.hpp"
 
 int main(){
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < 20; i++){
     int N = 2;
     double T = 1.0;
     Lattice test = Lattice(N, T, false);
