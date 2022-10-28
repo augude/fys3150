@@ -22,6 +22,13 @@ Lattice::Lattice(int N_, double T_, bool ordered){
         spins = lattice;
     }
     
+    //saving the values for relative probabilities 
+    energyDiff[-8] = exp(8/T);
+    energyDiff[-4] = exp(4/T);
+    energyDiff[0] = 1.0;
+    energyDiff[4] = exp(4/T);
+    energyDiff[8] = exp(-8/T);
+    
 }
 
 vec Lattice::energyMagnetization(){
@@ -32,7 +39,7 @@ vec Lattice::energyMagnetization(){
             int spinRight = spins(i, (j + 1) % N); //spin to the right of (i, j) with periodic boundary conditions
             int spinUp = spins((i + 1) % N, j); //spin above (i, j) with periodic boundary conditions
             EM(0) += -spin*spinRight - spin*spinUp; 
-            EM(1) += spin;
+            EM(1) += abs(spin);
         }
     }
     return EM;
@@ -40,10 +47,9 @@ vec Lattice::energyMagnetization(){
 
 int Lattice::energyij(int i, int j){
     int E = 0;
-    E -= spins(i, j)*spins(i, (j + 1) % N); //bound to neighbour to the right
-    E -= spins(i, j)*spins(i, (j - 1) % N); //bound to neighbour to the ledt
-    E -= spins(i, j)*spins((i + 1) % N, j); //bound to neighbour above 
-    E -= spins(i, j)*spins((i - 1) % N, j); //bound to neighbour below
-
-    return E;
+    E -= spins(i, (j + 1) % N); //bound to neighbour to the right
+    E -= spins(i, (j - 1 + N) % N); //bound to neighbour to the ledt
+    E -= spins((i + 1) % N, j); //bound to neighbour above 
+    E -= spins((i - 1 + N) % N, j); //bound to neighbour below
+    return E*spins(i, j);
 }

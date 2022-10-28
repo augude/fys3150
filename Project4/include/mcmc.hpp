@@ -1,4 +1,4 @@
 #pragma once 
 #include "lattice.hpp"
 
-Lattice mcmc(Lattice spins);
+Lattice mcmc(Lattice s);

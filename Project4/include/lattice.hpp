@@ -10,7 +10,9 @@ class Lattice{
     public:
         int N; //size of lattice
         double T; //temperature
-        mat spins; //ensamble of spins  
+        mat spins; //ensamble of spins
+        map<int, double> energyDiff; //map from energy differences to relative probabilities
+  
         
         //initialize the spin ensamble of size N x N with either ordered spins(all +1) or unordered(random +1/-1)
         Lattice(int N_, double T_, bool ordered);
