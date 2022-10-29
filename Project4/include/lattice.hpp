@@ -8,14 +8,14 @@ using namespace arma;
 class Lattice{
     
     public:
-        int N; //size of lattice
+        int L; //size of lattice
         double T; //temperature
         mat spins; //ensamble of spins
         map<int, double> energyDiff; //map from energy differences to relative probabilities
   
         
         //initialize the spin ensamble of size N x N with either ordered spins(all +1) or unordered(random +1/-1)
-        Lattice(int N_, double T_, bool ordered);
+        Lattice(int L_, double T_, bool ordered);
 
         //calculate energy and magnetization of lattice
         vec energyMagnetization();
