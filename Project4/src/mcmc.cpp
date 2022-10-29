@@ -1,7 +1,7 @@
 #include "../include/mcmc.hpp"
 #include "../include/utils.hpp"
 
-Lattice mcCycle(Lattice s){
+void mcCycle(Lattice& s, double& E, double& M){
     int L = s.L;
     for (int i = 0; i < L*L; i++){
         arma::mat candidate = s.spins;
@@ -10,31 +10,31 @@ Lattice mcCycle(Lattice s){
         candidate(randomi, randomj) = -1*candidate(randomi, randomj); //generate the candidate state
 
         int ed = -2*s.energyij(randomi, randomj); //calculate the energy difference between the two states
+        int md = -2*s.spins(randomi, randomj);
         double A = s.energyDiff[ed]; //acceptance probability from the energy difference using prerecorded values
         double r = ((double) rand() / (double) RAND_MAX);
-        s.spins = s.spins * (r > A) + candidate * (r <= A); //accept the candidate if r <= A
+        
+        if (r <= A){
+            //update the state, energy and magnetization
+            s.spins = candidate; 
+            E += ed;
+            M += md;
+        }
     }
-    return s;
 }
 
 void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
-    //vectors for storing quantities
-    //vec energy = vec(numberCycles); 
-    //vec energy1mom = vec(numberCycles);
-    //vec energy2mom = vec(numberCycles);
-    
-   // vec magnetization  = vec(numberCycles);
-   // vec mag1mom = vec(numberCycles);
-   // vec mag2mom = vec(numberCycles);
-
-    // vec heatCap = vec(numberCycles);
-    // vec suscep = vec(numberCycles);
-
+   
     std::ofstream ofile;
     ofile.open(filename);
 
     //initialize a lattice of size LxL at temperature T 
     Lattice s = Lattice(L, T, ordered);
+
+    double denomCv= L*L*T*T; //denominator in expression for Cv
+    double denomChi = L*L*T; //denominator in expression for chi
+    
+    //values to be stored
     vec energyMag = s.energyMagnetization();
     double energy = energyMag(0);
     double energy1mom = energy;
@@ -43,23 +43,20 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
     double mag = energyMag(1);
     double mag1mom = abs(mag);
     double mag2mom = mag*mag;
-    double heatCap = 1/(L*L*T*T)*(energy2mom - energy1mom*energy1mom);
-    double suscep = 1/(L*L*T)*(mag2mom - mag1mom*mag1mom);
+    double heatCap = 1/denomCv*(energy2mom - energy1mom*energy1mom);
+    double suscep = 1/denomChi*(mag2mom - mag1mom*mag1mom);
     
     ofile << "energy,energy1mom,energy2mom,magnetization,magnetization1mom,magnetization2mom,heatCapacity,susceptibility,temperature,gridsize" << endl;
     for (int i = 0; i < numberCycles; i++){
-        Lattice nextState = mcCycle(s); //do one whole mc cycle 
-        energyMag = nextState.energyMagnetization();
-        energy = energyMag(0);
+        mcCycle(s, energy, mag); //do one whole mc cycle and update the state, energy and magnetization 
         energy1mom = (i*energy1mom + energy)/(i + 1);
         energy2mom = (i*energy2mom + energy*energy)/(i + 1);
 
-        mag = energyMag(1);
         mag1mom = (i*mag1mom + abs(mag))/(i + 1);
         mag2mom = (i*mag2mom + mag*mag)/(i + 1);
         
-        heatCap = 1/(L*L*T*T)*(energy2mom - energy1mom*energy1mom);
-        suscep = 1/(L*L*T)*(mag2mom - mag1mom*mag1mom);
+        heatCap = 1/denomCv*(energy2mom - energy1mom*energy1mom);
+        suscep = 1/denomChi*(mag2mom - mag1mom*mag1mom);
 
         //write values to file
         ofile << scientificFormat(energy) << "," 
@@ -72,8 +69,6 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
               << scientificFormat(suscep) << ","
               << scientificFormat(T) << ","
               << scientificFormat(L) << endl;
-        
-        s.spins = nextState.spins; //update state and rerun 
     }
     ofile.close();
     

@@ -1,6 +1,6 @@
 #include "../include/lattice.hpp"
 
-Lattice::Lattice(int L_, double T_, bool ordered){
+Lattice::Lattice(const int L_, double T_, bool ordered){
     //throw an assertion if L is not even
     assert(L % 2 == 0);
     T = T_;
@@ -56,10 +56,11 @@ vec Lattice::energyMagnetization(){
 }
 
 int Lattice::energyij(int i, int j){
-    int E = 0;
-    E -= spins(i, (j + 1) % L); //bound to neighbour to the right
-    E -= spins(i, (j - 1 + L) % L); //bound to neighbour to the ledt
-    E -= spins((i + 1) % L, j); //bound to neighbour above 
-    E -= spins((i - 1 + L) % L, j); //bound to neighbour below
-    return E*spins(i, j);
+    int s = spins(i, j);
+    int left = spins(i, (j + 1) % L); //neighbour to the right
+    int right = spins(i, (j - 1 + L) % L); //neighbour to the ledt
+    int up = spins((i + 1) % L, j); //neighbour above 
+    int down = spins((i - 1 + L) % L, j); //neighbour below
+    int E = -s*(left + right + up + down);
+    return E;
 }

@@ -16,7 +16,7 @@ class Lattice{
   
         
         //initialize the spin ensamble of size N x N with either ordered spins(all +1) or unordered(random +1/-1)
-        Lattice(int L_, double T_, bool ordered);
+        Lattice(const int L_, double T_, bool ordered);
 
         //calculate energy and magnetization of lattice
         vec energyMagnetization();
