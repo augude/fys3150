@@ -7,4 +7,4 @@
 Lattice mcCycle(Lattice s);
 
 //performe many mccycles at temperature T of LxL-grid and print results to csv file 
-void mcmc(double T, int L, int numberCycles, string filename);
+void mcmc(double T, int L, int numberCycles, bool ordered, string filename);

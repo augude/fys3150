@@ -1,6 +1,8 @@
 #include "../include/lattice.hpp"
 
 Lattice::Lattice(int L_, double T_, bool ordered){
+    //throw an assertion if L is not even
+    assert(L % 2 == 0);
     T = T_;
     L = L_;
     
@@ -22,24 +24,32 @@ Lattice::Lattice(int L_, double T_, bool ordered){
         spins = lattice;
     }
     
-    //saving the values for relative probabilities 
-    energyDiff[-8] = exp(8/T);
-    energyDiff[-4] = exp(4/T);
+    //saving the values for the acceptance probabilities 
+    energyDiff[-8] = 1.0;
+    energyDiff[-4] = 1.0;
     energyDiff[0] = 1.0;
-    energyDiff[4] = exp(4/T);
+    energyDiff[4] = exp(-4/T);
     energyDiff[8] = exp(-8/T);
     
 }
 
 vec Lattice::energyMagnetization(){
     vec EM = vec(2).fill(0); //vector to store energy and magnetization
-    for (int i = 0; i < L; i++){
-        for (int j = 0; j < L; j++){
-            int spin = spins(i, j); //spin at position (i, j)
-            int spinRight = spins(i, (j + 1) % L); //spin to the right of (i, j) with periodic boundary conditions
-            int spinUp = spins((i + 1) % L, j); //spin above (i, j) with periodic boundary conditions
-            EM(0) += -spin*spinRight - spin*spinUp; 
-            EM(1) += spin;
+    //run through every row
+    for (int j = 0; j < L; j++){
+        //storing values that don't depend on the inner loop
+        vec colj = spins.col(j);
+        vec colright = spins.col((j + 1) % L);
+        vec colleft = spins.col((j - 1 + L) % L);
+        //run through every second coloumn starting at rownumber % 2
+        for (int i = j % 2; i < L; i += 2){
+            int pos = colj(i);
+            int right = colright(i);
+            int left = colleft(i);
+            int up = colj((i + 1) % L);
+            int down = colj((i - 1 + L) % L);
+            EM(0) -= spins(i, j)*(right + left + up + down);
+            EM(1) += spins(i, j)  + right;
         }
     }
     return EM;

@@ -2,6 +2,7 @@
 #include <armadillo>
 #include <iostream>
 #include <map>
+#include <cassert>
 using namespace std;
 using namespace arma; 
 
@@ -11,7 +12,7 @@ class Lattice{
         int L; //size of lattice
         double T; //temperature
         mat spins; //ensamble of spins
-        map<int, double> energyDiff; //map from energy differences to relative probabilities
+        map<int, double> energyDiff; //map from energy differences to acceptance probabilities
   
         
         //initialize the spin ensamble of size N x N with either ordered spins(all +1) or unordered(random +1/-1)
