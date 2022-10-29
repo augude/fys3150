@@ -45,6 +45,10 @@
 
 #pdf-files
 *.pdf
+
+
+## csv-files
+*.csv
 # End of https://www.toptal.com/developers/gitignore/api/c++
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,xcode
