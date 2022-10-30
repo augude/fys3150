@@ -4,19 +4,17 @@
 void mcCycle(Lattice& s, double& E, double& M){
     int L = s.L;
     for (int i = 0; i < L*L; i++){
-        arma::mat candidate = s.spins;
         int randomi = (int) rand() % L; //random integer indidies 
         int randomj = (int) rand() % L;
-        candidate(randomi, randomj) = -1*candidate(randomi, randomj); //generate the candidate state
 
-        int ed = -2*s.energyij(randomi, randomj); //calculate the energy difference between the two states
-        int md = -2*s.spins(randomi, randomj);
+        int ed = -2*s.energyij(randomi, randomj); //energy difference between the two states
         double A = s.energyDiff[ed]; //acceptance probability from the energy difference using prerecorded values
         double r = ((double) rand() / (double) RAND_MAX);
         
         if (r <= A){
             //update the state, energy and magnetization
-            s.spins = candidate; 
+            s.spins(randomi, randomj) *= -1; 
+            int md = -2*s.spins(randomi, randomj); //magnatization difference between the two states
             E += ed;
             M += md;
         }
@@ -33,9 +31,9 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
 
     double denomCv= L*L*T*T; //denominator in expression for Cv
     double denomChi = L*L*T; //denominator in expression for chi
-    
+    vec energyMag = s.energyMagnetization(); //initial energy and magnetization
+
     //values to be stored
-    vec energyMag = s.energyMagnetization();
     double energy = energyMag(0);
     double energy1mom = energy;
     double energy2mom = energy*energy;
