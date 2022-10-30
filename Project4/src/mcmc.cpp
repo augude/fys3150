@@ -1,7 +1,6 @@
 #include "../include/mcmc.hpp"
-#include "../include/utils.hpp"
 
-void mcCycle(Lattice& s, double& E, double& M){
+void mcCycle(Lattice& s, int& E, int& M){
     int L = s.L;
     for (int i = 0; i < L*L; i++){
         int randomi = (int) rand() % L; //random integer indidies 
@@ -32,17 +31,19 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
     vec energyMag = s.energyMagnetization(); //initial energy and magnetization
 
     //values to be stored
-    double energy = energyMag(0);
-    double mag = energyMag(1);
+    int energy = energyMag(0);
+    int mag = energyMag(1);
     
     ofile << "energy,magnetization,temperature,gridsize" << endl;
+    ofile << energy << "," 
+              << mag << ","
+              << T << ","
+              << L << endl;
     for (int i = 0; i < numberCycles; i++){
         mcCycle(s, energy, mag); //do one whole mc cycle and update the state, energy and magnetization 
         //write values to file
-        ofile << scientificFormat(energy) << "," 
-              << scientificFormat(mag) << ","
-              << scientificFormat(T) << ","
-              << scientificFormat(L) << endl;
+        ofile << energy << "," 
+              << mag << endl;
     }
     ofile.close();
     

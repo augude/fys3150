@@ -2,7 +2,7 @@
 #include "include/mcmc.hpp"
 #include "include/utils.hpp"
 #include <vector>
-#include "omp.h"  // OpenMP header
+#include "omp.h"  //OpenMP header
 
 
 int main(int argc, char* argv[]){
@@ -40,10 +40,5 @@ int main(int argc, char* argv[]){
         } //end parallelized region
     }
 
-    else{
-
-        cout << 20 % 2 << endl;
-    }
-    
     return 0;
 }
