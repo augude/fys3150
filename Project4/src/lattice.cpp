@@ -16,8 +16,8 @@ Lattice::Lattice(const int L_, double T_, bool ordered){
     else{
         arma_rng::set_seed_random();
         mat lattice = randi<mat>(L, L, arma::distr_param(0, 1));
-        for (int i = 0; i < L ; i++){
-            for (int j = 0; j < L; j++){
+        for (int j = 0; j < L ; j++){
+            for (int i = 0; i < L; i++){
                 if (lattice(i, j) == 0){
                     lattice(i, j) = -1;
                 }
@@ -35,26 +35,21 @@ Lattice::Lattice(const int L_, double T_, bool ordered){
     
 }
 
-vec Lattice::energyMagnetization(){
-    vec EM = vec(2).fill(0); //vector to store energy and magnetization
+void Lattice::energyMagnetization(){
     //run through every row
     for (int j = 0; j < L; j++){
         //storing values that don't depend on the inner loop
         vec colj = spins.col(j);
         vec colright = spins.col((j + 1) % L);
-        vec colleft = spins.col((j - 1 + L) % L);
         //run through every second coloumn starting at rownumber % 2
-        for (int i = j % 2; i < L; i += 2){
+        for (int i = 0; i < L; i ++){
             int pos = colj(i);
             int right = colright(i);
-            int left = colleft(i);
             int up = colj((i + 1) % L);
-            int down = colj((i - 1 + L) % L);
-            EM(0) -= spins(i, j)*(right + left + up + down);
-            EM(1) += spins(i, j)  + right;
+            E -= spins(i, j)*(right + up);
+            M += spins(i, j);
         }
     }
-    return EM;
 }
 
 int Lattice::energyij(int i, int j){

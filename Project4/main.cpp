@@ -9,7 +9,7 @@ using namespace arma;
 
 int main(int argc, char* argv[]){
     srand(time(NULL)); //set random seed
-    std::string testString  = argv[1];
+    string testString  = argv[1];
 
     if (testString == "validation2x2"){
         int N = 1e6; //number of MC cycles
@@ -41,6 +41,5 @@ int main(int argc, char* argv[]){
             } //end parallelized loop
         } //end parallelized region
     }
-
     return 0;
 }
