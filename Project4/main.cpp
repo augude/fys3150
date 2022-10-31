@@ -3,6 +3,8 @@
 #include "include/utils.hpp"
 #include <vector>
 #include "omp.h"  //OpenMP header
+using namespace std;
+using namespace arma; 
 
 
 int main(int argc, char* argv[]){
@@ -10,7 +12,7 @@ int main(int argc, char* argv[]){
     std::string testString  = argv[1];
 
     if (testString == "validation2x2"){
-        int N = 1e5; //number of MC cycles
+        int N = 1e6; //number of MC cycles
         const int L = 2; //size of lattice
         double T = 1.0;
         string filename = "validation2x2.csv";

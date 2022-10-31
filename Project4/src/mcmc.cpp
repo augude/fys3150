@@ -1,19 +1,19 @@
 #include "../include/mcmc.hpp"
+using namespace std;
+using namespace arma; 
 
-void mcCycle(Lattice& s, int& E, int& M){
+
+void mcCycle(Lattice& s, int& E, int& M, vec randomi, vec randomj, vec r){
     int L = s.L;
     for (int i = 0; i < L*L; i++){
-        int randomi = (int) rand() % L; //random integer indidies 
-        int randomj = (int) rand() % L;
-
-        int ed = -2*s.energyij(randomi, randomj); //energy difference between the two states
-        double A = s.energyDiff[ed]; //acceptance probability from the energy difference using prerecorded values
-        double r = ((double) rand() / (double) RAND_MAX);
         
-        if (r <= A){
+        int ed = -2*s.energyij(randomi[i], randomj[i]); //energy difference between the two states
+        double A = s.energyDiff[ed]; //acceptance probability from the energy difference using prerecorded values
+        
+        if (r[i] <= A){
             //update the state, energy and magnetization
-            s.spins(randomi, randomj) *= -1; 
-            int md = -2*s.spins(randomi, randomj); //magnatization difference between the two states
+            s.spins(randomi[i], randomj[i]) *= -1; 
+            int md = -2*s.spins(randomi[i], randomj[i]); //magnatization difference between the two states
             E += ed;
             M += md;
         }
@@ -40,7 +40,11 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
               << T << ","
               << L << endl;
     for (int i = 0; i < numberCycles; i++){
-        mcCycle(s, energy, mag); //do one whole mc cycle and update the state, energy and magnetization 
+        vec randomi = randi<vec>(L*L, arma::distr_param(0,L-1));
+        vec randomj = randi<vec>(L*L, arma::distr_param(0,L-1));
+        vec r(L*L, fill::randu);
+
+        mcCycle(s, energy, mag, randomi, randomj, r); //do one whole mc cycle and update the state, energy and magnetization 
         //write values to file
         ofile << energy << "," 
               << mag << endl;

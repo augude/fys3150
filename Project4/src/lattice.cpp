@@ -1,4 +1,6 @@
 #include "../include/lattice.hpp"
+using namespace std;
+using namespace arma; 
 
 Lattice::Lattice(const int L_, double T_, bool ordered){
     //throw an assertion if L is not even
