@@ -46,6 +46,8 @@
 #pdf-files
 *.pdf
 
+#output for project 4
+/Project4/output
 
 ## csv-files
 *.csv
