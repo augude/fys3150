@@ -55,7 +55,7 @@ void Lattice::energyMagnetization(){
 int Lattice::energyij(int i, int j){
     int s = spins(i, j);
     int left = spins(i, (j + 1) % L); //neighbour to the right
-    int right = spins(i, (j - 1 + L) % L); //neighbour to the ledt
+    int right = spins(i, (j - 1 + L) % L); //neighbour to the left
     int up = spins((i + 1) % L, j); //neighbour above 
     int down = spins((i - 1 + L) % L, j); //neighbour below
     int E = -s*(left + right + up + down);
