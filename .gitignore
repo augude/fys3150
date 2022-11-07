@@ -7,6 +7,7 @@
 # Prerequisites
 *.d
 
+/Project4/__pychache__
 # Compiled Object files
 *.slo
 *.lo
