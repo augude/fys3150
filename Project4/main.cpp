@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
         int N = 1e6; //number of MC cycles
         const int L = 2; //size of lattice
         double T = 1.0;
-        string filename = "output/validation2x2.csv";
+        string filename = "output/validation2x2.bin";
         mcmc(T, L, N, false, filename);
     }
 
@@ -28,10 +28,10 @@ int main(int argc, char* argv[]){
         const int L = 20; //size of lattice
         double T1 = 1.0;
         double T2 = 2.4;
-        string filename1 = "output/ordered1.csv";
-        string filename2 = "output/ordered2.csv";
-        string filename3 = "output/unordered1.csv";
-        string filename4 = "output/unordered2.csv";
+        string filename1 = "output/ordered1.bin";
+        string filename2 = "output/ordered2.bin";
+        string filename3 = "output/unordered1.bin";
+        string filename4 = "output/unordered2.bin";
 
         vector<double> temp = {T1, T2, T1, T2}; 
         vector<string> filenames = {filename1, filename2, filename3, filename4};
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
         {
             #pragma omp for
             for (double t : temp){
-                filename = "output/L=20_" + to_string(omp_get_thread_num()) + ".csv";
+                filename = "output/L=20_" + to_string(omp_get_thread_num()) + ".bin";
                 mcmc(t, L, N, false, filename); 
             } //end parallelized loop
         } //end parallelized region
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
         // the total number of samples is distributed evenly across the different threads
         double T = 1.0; //temperature
         int L = 20;
-        string filename = "output/test.csv";
+        string filename = "output/test.bin";
         int numberThreads;
         auto t1 = high_resolution_clock::now();
         #pragma omp parallel
@@ -91,8 +91,8 @@ int main(int argc, char* argv[]){
         {
             #pragma omp for
             for (int i = 0; i < 10; i++){
-                filename = "output/L=" + to_string(L) + "_" + to_string(i) + ".csv";
-                mcmc(temp[i], L, N, true, filename); 
+                filename = "output/L=" + to_string(L) + "_" + to_string(i) + ".bin";
+                mcmc(temp[i], L, N, false, filename); 
             } //end parallelized loop
         } //end parallelized region
     }

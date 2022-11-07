@@ -13,18 +13,15 @@ void mcCycle(Lattice& s, vector<int> randomi, vector<int> randomj, vector<double
         if (r[i] <= A){
             //update the state, energy and magnetization
             int md = -2*s.spins(randomi[i], randomj[i]); //magnatization difference between the two states
-            s.spins(randomi[i], randomj[i]) *= -1; 
-            s.E += ed;
-            s.M += md;
+            s.spins(randomi[i], randomj[i]) *= -1; //update the spin ensemble
+            s.E += ed; //update the energy 
+            s.M += md; //update the magnetization
         }
     }
 }
 
 void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
    
-    std::ofstream ofile;
-    ofile.open(filename);
-
     mt19937 generator;
     //generator of random doubles on [0.0, 1.0)
     uniform_real_distribution<double> uniformDouble = uniform_real_distribution<double>(0.0, 1.0);
@@ -38,6 +35,7 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
     vector<int> randomj(L*L);
     vector<double> r(L*L);
 
+
     //functions for filling vectors with random numbers
     auto genInt = [&uniformInt, &generator](){
                 return uniformInt(generator);
@@ -49,12 +47,11 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
 
     //initialize a lattice of size LxL at temperature T 
     Lattice s = Lattice(L, T, ordered);
+
+    mat EM = mat(numberCycles, 2);
+
+    s.energyMagnetization(); //initialize E and M
     
-    ofile << "energy,magnetization,temperature,gridsize" << endl;
-    ofile << s.E << "," 
-              << s.M << ","
-              << T << ","
-              << L << endl;
     for (int i = 0; i < numberCycles; i++){
         generate(begin(randomi), end(randomi), genInt);
         generate(begin(randomj), end(randomj), genInt);
@@ -62,11 +59,10 @@ void mcmc(double T, int L, int numberCycles, bool ordered, string filename){
 
         mcCycle(s, randomi, randomj, r); //do one whole mc cycle and update the state, energy and magnetization 
         //write values to file
-        ofile << s.E << "," 
-              << s.M << endl;
+        EM[i, 0] = s.E;
+        EM[i, 1] = s.M;
     }
-    ofile.close();
-    
+    EM.save(filename); //saving as binaryfile    
 }
     
     
