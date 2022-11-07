@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
         vector<string> filenames = {filename1, filename2, filename3, filename4};
         vector<bool> order = {true, true, false, false};
 
-#pragma omp parallel
+        #pragma omp parallel
         {
-#pragma omp for
+            #pragma omp for
             for (int i = 0; i < 4; i++) {
                 mcmc(temp[i], L, N, order[i], filenames[i]);
             }  // end parallelized loop
@@ -56,9 +56,9 @@ int main(int argc, char* argv[]) {
         vec temp = arma::linspace<vec>(1.0, 2.4, 5);
         string filename;
 
-#pragma omp parallel
+        #pragma omp parallel
         {
-#pragma omp for
+        #pragma omp for
             for (int i = 0; i < 5; i++) {
                 filename =
                     "output/L=" + to_string(L) + "_" + to_string(i) + ".bin";
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         string filename = "output/test.bin";
         int numberThreads;
         auto t1 = high_resolution_clock::now();
-#pragma omp parallel
+        #pragma omp parallel
         {
             numberThreads = omp_get_num_threads();
             int N = (double)1e6 / numberThreads;  // number steps per cycle
@@ -92,12 +92,11 @@ int main(int argc, char* argv[]) {
         const int L = atoi(argv[2]);  // size of lattice
         vec temp = arma::linspace<vec>(2.1, 2.4, 10);
         string filename;
-#pragma omp parallel
+        #pragma omp parallel
         {
-#pragma omp for
-            for (int i = 0; i < 10; i++) {
-                filename =
-                    "output/L=" + to_string(L) + "_" + to_string(i) + ".bin";
+        #pragma omp for
+            for (int i : {5, 6, 7}) {
+                filename = "output/L=" + to_string(L) + "_" + to_string(i) + ".bin";
                 mcmc(temp[i], L, N, false, filename);
             }  // end parallelized loop
         }      // end parallelized region

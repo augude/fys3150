@@ -6,7 +6,7 @@ def binToDf(filename):
     """ returns a pandas dataframe  
 
     Args:
-        filename (_string_): csv-file with energy and magnetization for each cycle
+        filename (_string_): bin-file with energy and magnetization for each cycle
     """
     data = pa.mat()
     data.load(filename)

@@ -7,7 +7,7 @@ problem5:
 	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=4 && ./main.exe "burnIn"
 
 problem6: 
-	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=5 && ./main.exe "histograms"
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=4 && ./main.exe "histograms"
 
 problem7:
 	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe 
@@ -25,6 +25,6 @@ problem8c:
 	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=10 && ./main.exe "problem8" 80
 
 problem8d: 
-	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=10 && ./main.exe "problem8" 100
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=3 && ./main.exe "problem8" 100
 
 problem8: problem8a problem8b problem8c problem8d
