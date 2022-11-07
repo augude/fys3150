@@ -13,8 +13,8 @@ def binToDf(filename):
     data = np.array(data)
     L = data[0,0]
     T = data[0,1]
-    energy = data[:,0]
-    mag = data[:,1]
+    energy = data[1:,0]
+    mag = data[1:,1]
     cycles = np.arange(0, len(energy))
     temperature = np.zeros(len(energy))
     temperature[:] = T
