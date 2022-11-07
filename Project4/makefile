@@ -26,3 +26,5 @@ problem8c:
 
 problem8d: 
 	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=10 && ./main.exe "problem8" 100
+
+problem8: problem8a problem8b problem8c problem8d

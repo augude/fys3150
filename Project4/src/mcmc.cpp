@@ -12,8 +12,8 @@ void mcCycle(Lattice& s, vector<int> randomi, vector<int> randomj, vector<double
         
         if (r[i] <= A){
             //update the state, energy and magnetization
-            s.spins(randomi[i], randomj[i]) *= -1; 
             int md = -2*s.spins(randomi[i], randomj[i]); //magnatization difference between the two states
+            s.spins(randomi[i], randomj[i]) *= -1; 
             s.E += ed;
             s.M += md;
         }
