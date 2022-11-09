@@ -27,6 +27,10 @@ server8c:
 server8d:
 	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -fopenmp -o main.exe && export OMP_NUM_THREADS=32 && ./main.exe "problem8" 100
 
+server8bonus:
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -fopenmp -o main.exe && export OMP_NUM_THREADS=32 && ./main.exe "problem8" 1000
+
+
 problem4: 
 	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && ./main.exe "validation2x2"
 

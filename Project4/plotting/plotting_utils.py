@@ -22,7 +22,7 @@ def binToDf(filename):
     gridsize[:] = L
     energy1mom = np.cumsum(energy)/(cycles + 1)
     energy2mom = np.cumsum(energy**2)/(cycles + 1)
-    heatCapacity = 1/(L**2*T**T)*(energy2mom - energy1mom**2)
+    heatCapacity = 1/(L**2*T*T)*(energy2mom - energy1mom**2)
     mag1mom = np.cumsum(abs(mag))/(cycles + 1)
     mag2mom = np.cumsum(mag**2)/(cycles + 1)
     susceptibility = 1/(L**2*T)*(mag2mom - mag1mom**2)
@@ -32,8 +32,8 @@ def binToDf(filename):
                 'magnetization': mag,
                 'energy1mom': energy1mom,
                 'energy2mom': energy2mom,
-                'mag1mom': mag1mom,
-                'mag2mom': mag2mom,
+                'magnetization1mom': mag1mom,
+                'magnetization2mom': mag2mom,
                 'heatCapacity': heatCapacity,
                 'susceptibility': susceptibility,
                 'temperature': temperature,
