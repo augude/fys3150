@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
     } else if (testString == "problem8") {
         int N = 1e6;                  // number of MC cycles
         const int L = atoi(argv[2]);  // size of lattice
+        vec temp = arma::linspace<vec>(2.1, 2.4, 32);
 #pragma omp parallel for
         for (int i = 0; i < 32; i++) {
             string filename =
