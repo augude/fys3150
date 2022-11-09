@@ -48,7 +48,7 @@ __pychache__
 *.txt
 
 #pdf-files
-*.pdf
+# *.pdf
 
 #output for project 4
 /Project4/output

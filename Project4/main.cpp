@@ -87,7 +87,8 @@ int main(int argc, char* argv[]) {
         cout << scientificFormat(numberThreads)
              << scientificFormat(duration.count()) << endl;
 
-    } else if (testString == "problem8") {
+    } 
+    else if (testString == "problem8") {
         int N = 1e6;                  // number of MC cycles
         const int L = atoi(argv[2]);  // size of lattice
         vec temp = arma::linspace<vec>(2.1, 2.4, 32);
@@ -104,16 +105,16 @@ int main(int argc, char* argv[]) {
         const int L = atoi(argv[2]);  // size of lattice
         vec temp = arma::linspace<vec>(2.22, 2.35, 10);
         string filename;
-#pragma omp parallel
+        #pragma omp parallel
         {
-#pragma omp for
+        #pragma omp for
             for (int i = 0; i < 10; i++) {
-                filename = "output/zoom_L=" + to_string(L) + "_" +
-                           to_string(i) + ".bin";
+                filename = "output/zoom_L=" + to_string(L) + "_" + to_string(i) + ".bin";
                 mcmc(temp[i], L, N, false, filename);
             }  // end parallelized loop
         }      // end parallelized region
     }
+
 
     return 0;
 }
