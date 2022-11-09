@@ -43,15 +43,29 @@ problem7:
 	done
 
 problem8a: 
-	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=10 && ./main.exe "problem8" 40
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=8 && ./main.exe "problem8" 40
 
 problem8b: 
-	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=10 && ./main.exe "problem8" 60
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=8 && ./main.exe "problem8" 60
 
 problem8c: 
-	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=10 && ./main.exe "problem8" 80
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=8 && ./main.exe "problem8" 80
 
 problem8d: 
-	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=3 && ./main.exe "problem8" 100
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=8 && ./main.exe "problem8" 100
 
 problem8: problem8a problem8b problem8c problem8d
+
+problem8aZ: 
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=4 && ./main.exe "problem8zoom" 40
+
+problem8bZ: 
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=4 && ./main.exe "problem8zoom" 60
+
+problem8cZ: 
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=4 && ./main.exe "problem8zoom" 80
+
+problem8dZ: 
+	g++ main.cpp src/lattice.cpp src/mcmc.cpp src/utils.cpp -O2 -I \include -larmadillo -fopenmp -o main.exe && export OMP_NUM_THREADS=4 && ./main.exe "problem8zoom" 100
+
+problem8Z: problem8aZ problem8bZ problem8cZ problem8dZ
