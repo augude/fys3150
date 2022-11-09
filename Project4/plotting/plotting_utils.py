@@ -26,14 +26,19 @@ def binToDf(filename):
     mag1mom = np.cumsum(abs(mag))/(cycles + 1)
     mag2mom = np.cumsum(mag**2)/(cycles + 1)
     susceptibility = 1/(L**2*T)*(mag2mom - mag1mom**2)
-    df = pd.DataFrame({'energy': energy, 'magnetization': mag, 'energy1mom': energy1mom, 'energy2mom': energy2mom, 'heatCapacity': heatCapacity, 'temperature': temperature, 'gridsize': gridsize})
-    df['energy1mom'] = energy1mom
-    df['energy2mom'] = energy2mom
-    df['magnetization1mom'] = mag1mom
-    df['magnetization2mom'] = mag2mom
-    df['heatCapacity'] = heatCapacity
-    df['susceptibility'] = susceptibility
-    df['temperature'] = temperature
-    df['gridsize'] = gridsize
+    df = pd.DataFrame(
+            {
+                'energy': energy,
+                'magnetization': mag,
+                'energy1mom': energy1mom,
+                'energy2mom': energy2mom,
+                'mag1mom': mag1mom,
+                'mag2mom': mag2mom,
+                'heatCapacity': heatCapacity,
+                'susceptibility': susceptibility,
+                'temperature': temperature,
+                'gridsize': gridsize
+        }
+    )
     
     return df

@@ -1,5 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++
+Project4/run
+armadillo*
+Project4/plotting/__pycache__/
 
 .vscode
 
