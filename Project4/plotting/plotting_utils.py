@@ -1,6 +1,7 @@
 import pyarma as pa
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def binToDf(filename):
     """ returns a pandas dataframe  
