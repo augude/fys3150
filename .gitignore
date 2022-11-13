@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++
 Project4/run
 armadillo*
-Project4/plotting/__pycache__/
+Project4/plotting/__pycache__/plotting.cpython-36.pyc
 
 .vscode
 
