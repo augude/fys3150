@@ -8,12 +8,16 @@ class Solver{
 
     public:
         int M, N; // Iter points for x,y axes and time
+        double T; 
         double dt;
         double h;
-        arma::mat u;
-        arma::mat v;
-        arma::cx_mat A;
-        arma::cx_mat B;
+
+        arma::cx_mat u;
+        arma::cx_mat tmp;
+        arma::mat v; // Input matrix
+
+        arma::sp_cx_mat A;
+        arma::sp_cx_mat B;
         std::complex<double> r;
         arma::cx_vec a;
         arma::cx_vec b;
@@ -28,7 +32,7 @@ class Solver{
         void fill_matrices();
 
         //Forwards the simulation one time step
-        arma::cx_mat forward(arma::cx_mat A, arma::cx_mat B, arma::vec u);
+        void forward();
 
         //Sets the initial state of u
         void set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py);

@@ -23,6 +23,7 @@ Solver::Solver(int M_in, int N_in, double T_in)
 
     // Only internal points
     u.zeros(M-2, M-2);
+    tmp.zeros(M-2, M-2);
     v.ones(M-2, M-2); //Initalise input matrix V with some constant
 }
 
@@ -70,9 +71,6 @@ void Solver::fill_matrices()
         }
     }
 
-    std::cout << a << std::endl;
-    std::cout << b << std::endl;
-
     // Inserting r/-r diagonals into A and B
     A.diag(M-2) = -rDiag;
     A.diag(2-M) = -rDiag;
@@ -89,22 +87,25 @@ void Solver::fill_matrices()
     // Inserting a and b vectors as diagonals for A and B
     A.diag() = a;
     B.diag() = b;
-
-    std::cout << A << std::endl;
-    std::cout << B << std::endl;
 }
 
-
-arma::cx_mat Solver::forward(arma::cx_mat A, arma::cx_mat B, arma::vec u)
-{
-    arma::cx_vec b = B*u;
-    arma::cx_vec x = arma::solve(A, b);
-    return x;
-}
 
 void Solver::set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py)
 {
-    //Create matrix with boundary conditions
+    double real;
+    double imag;
+    std::complex<double> e;
+
+    for (int i = 0; i < M-2; i++){
+        for (int j = 0; j < M-2; j++){
+            real = -((i*h - xc)*(i*h - xc))/(2*sigx*sigx) - ((j*h - yc)*(j*h - yc))/(2*sigy*sigy);
+            imag = px*(i*h - xc) + py*(j*h - yc);
+            e = std::complex<double>(real, imag);
+            u.at(i,j) = exp(e);
+        }
+    }
+    
+    /* //Create matrix with boundary conditions
     arma::cx_mat U;
     U.zeros(M,M);
 
@@ -119,11 +120,25 @@ void Solver::set_initial_state(double xc, double sigx, double px, double yc, dou
             e = std::complex<double>(real, imag);
 
             U.at(i,j) = exp(e);
+            
         }
     }
 
     std::cout << U << std::endl;
     U = U/arma::accu(U);
-    std::cout << U << std::endl;
+    std::cout << U << std::endl; */
     
+}
+
+void Solver::forward()
+{
+    tmp = u;
+    tmp.reshape((M-2)*(M-2), 1); // For matrix multiplication
+    arma::spsolve(u, A, B*tmp);
+    u.reshape(M-2, M-2); // Revert back to matrix?
+    
+    
+    /* arma::cx_vec b = B*u;
+    arma::cx_vec x = arma::spsolve(A, b);
+    return x; */
 }
