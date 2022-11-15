@@ -1,6 +1,7 @@
-#include "../include/Solver.hpp"
+#include "include/Solver.hpp"
 
-Solver::Solver(int M_in, int N_in, double DT){
+Solver::Solver(int M_in, int N_in, double DT)
+{
     M = M_in;
     N = N_in;
     dt = DT;
@@ -23,11 +24,12 @@ Solver::Solver(int M_in, int N_in, double DT){
     v.ones(M-2, M-2); //Initalise input matrix V with some constant
 }
 
-int Solver::pair_to_single(int i, int j){
+int Solver::pair_to_single(int i, int j)
+{
     return j*(M-2) + i;
 }
 
-void Solver::fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec b){
+void Solver::fill_matrices(){
     A.zeros((M-2)*(M-2), (M-2)*(M-2));
     B.zeros((M-2)*(M-2), (M-2)*(M-2));
     
@@ -47,9 +49,6 @@ void Solver::fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec 
             b.at(k) = c_b;
         }
     }
-
-    std::cout << a << std::endl;
-    std::cout << b << std::endl;
 
     A.diag() = a;
     B.diag() = b;
@@ -76,8 +75,34 @@ void Solver::fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec 
 
 
 arma::cx_mat Solver::forward(arma::cx_mat A, arma::cx_mat B, arma::vec u)
-        {
-            arma::cx_vec b = B*u;
-            arma::cx_vec x = arma::solve(A, b);
-            return x;
+{
+    arma::cx_vec b = B*u;
+    arma::cx_vec x = arma::solve(A, b);
+    return x;
+}
+
+void Solver::set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py)
+{
+    //Create matrix with boundary conditions
+    arma::cx_mat U;
+    U.zeros(M,M);
+
+    double real;
+    double imag;
+    std::complex<double> e;
+
+    for (int i = 1; i < M-1; i++){
+        for (int j = 1; j < M-1; j++){
+            real = -((i*h - xc)*(i*h - xc))/(2*sigx*sigx) - ((j*h - yc)*(j*h - yc))/(2*sigy*sigy);
+            imag = px*(i*h - xc) + py*(j*h - yc);
+            e = std::complex<double>(real, imag);
+
+            U.at(i,j) = exp(e);
         }
+    }
+
+    std::cout << U << std::endl;
+    U = U/arma::accu(U);
+    std::cout << U << std::endl;
+    
+}
