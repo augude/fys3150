@@ -1,4 +1,4 @@
-#include "include/Solver.hpp"
+#include "../include/Solver.hpp"
 
 Solver::Solver(int M_in, int N_in, double DT)
 {
