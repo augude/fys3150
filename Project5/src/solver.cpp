@@ -18,13 +18,16 @@ class Solver
 
         std::complex<double> r;
 
+        arma::cx_vec a((M-2)*(M-2));
+        arma::cx_vec b((M-2)*(M-2));
+
         /* Constructor */
         Solver(int M_in, int N_in, double DT)
         {
             M = M_in;
             N = N_in;
             dt = DT;
-            h = 1./(N-1);
+            h = 1./(M-1);
             r = std::complex<double>(0, dt/(2*h*h));
  
             /* u.zeros(m, m);
@@ -51,13 +54,17 @@ class Solver
         }
 
         /* Filling matrices for Crank-Nicholson */
-        void fill_matrices()
+        void fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec b)
         {
+            a.zeros((M-2)*(M-2));
+            b.zeros((M-2)*(M-2));
+
+            std::complex<double> c_a(1.0, 4.0*r.imag() + 0.5*dt*v.at(i,j));
+            std::complex<double> c_b = std::conj(c_a);
+            
+            
             A.zeros((M-2)*(M-2), (M-2)*(M-2));
             B.zeros((M-2)*(M-2), (M-2)*(M-2));
-            arma::cx_vec a((M-2)*(M-2));
-            arma::cx_vec b((M-2)*(M-2));
-
             std::complex<double> c_b;
             int k;
 
