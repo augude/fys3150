@@ -29,12 +29,8 @@ int Solver::pair_to_single(int i, int j)
     return j*(M-2) + i;
 }
 
-<<<<<<< HEAD
-void Solver::fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec b){
-    //matrices
-=======
 void Solver::fill_matrices(){
->>>>>>> 39242bbc556dda11e0cbd97b6b698a551c13e0a7
+    //matrices
     A.zeros((M-2)*(M-2), (M-2)*(M-2));
     B.zeros((M-2)*(M-2), (M-2)*(M-2));
 
@@ -68,7 +64,6 @@ void Solver::fill_matrices(){
         }
     }
 
-<<<<<<< HEAD
     std::cout << a << std::endl;
     std::cout << b << std::endl;
 
@@ -83,8 +78,6 @@ void Solver::fill_matrices(){
         B.submat(j,j,j+M-3,j+M-3)=subDiag;
     }
 
-=======
->>>>>>> 39242bbc556dda11e0cbd97b6b698a551c13e0a7
     A.diag() = a;
     B.diag() = b;
     std::cout << A << std::endl;
