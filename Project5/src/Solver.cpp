@@ -28,15 +28,29 @@ int Solver::pair_to_single(int i, int j){
 }
 
 void Solver::fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec b){
+    //matrices
     A.zeros((M-2)*(M-2), (M-2)*(M-2));
     B.zeros((M-2)*(M-2), (M-2)*(M-2));
+
+    //submatrices
+    arma::sp_cx_mat subDiag(M-2, M-2); subDiag.zeros();
     
+    //diagonals
     a.zeros((M-2)*(M-2));
     b.zeros((M-2)*(M-2));
+
+    //The r diagonals
+    arma::cx_vec offDiag((M-2)*(M-3)); offDiag.fill(r);
     
-    std::complex<double> c_b;
+    //Creating subDiag:
+    arma::cx_vec r_vec(M-3); r_vec.fill(r);
+    subDiag.diag(1)=r_vec;
+    subDiag.diag(-1)=r_vec;
+
+    arma::cx_double c_b;
     int k;
 
+    //Creating the diagonals. 
     for (int i = 0; i < M-2; i++){
         for (int j = 0; j < M-2; j++){
             k = pair_to_single(i, j);
@@ -51,27 +65,21 @@ void Solver::fill_matrices(std::complex<double> r, arma::cx_vec a, arma::cx_vec 
     std::cout << a << std::endl;
     std::cout << b << std::endl;
 
+
+    //Inserting into A and B
+    A.diag(M-2)=-offDiag; A.diag(2-M)=-offDiag;
+    B.diag(M-2)=offDiag; B.diag(2-M)=offDiag;
+
+    for (int i=0;i<M-2;i++){
+        int j=i*(M-2);
+        A.submat(j,j,j+M-3,j+M-3)=-subDiag;
+        B.submat(j,j,j+M-3,j+M-3)=subDiag;
+    }
+
     A.diag() = a;
     B.diag() = b;
-
-
-    for (int i = (M-2); i < (M-2)*(M-2); i++){
-        A.at(i - (M-2), i) = -r;
-        A.at(i, i - (M-2)) = -r;
-
-        B.at(i - (M-2), i) = r;
-        B.at(i, i - (M-2)) = r;
-    }
-
-    for (int i = 1; i < (M-2)*(M-2); i++){
-        if (i % (M-2) != 0){
-            A.at(i-1, i) = -r;
-            A.at(i, i-1) = -r;
-
-            B.at(i-1, i) = r;
-            B.at(i, i-1) = r;
-        }
-    }
+    std::cout << A << std::endl;
+    std::cout << B << std::endl;
 }
 
 
