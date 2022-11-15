@@ -14,7 +14,7 @@ class Solver{
 
         arma::cx_mat u;
         arma::cx_mat tmp;
-        arma::mat v; // Input matrix
+        arma::mat V; // Input matrix
 
         arma::sp_cx_mat A;
         arma::sp_cx_mat B;
@@ -36,6 +36,9 @@ class Solver{
 
         //Sets the initial state of u
         void set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py);
+
+        //
+        void set_potential()
 
 
 

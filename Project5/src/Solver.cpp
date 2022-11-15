@@ -24,7 +24,7 @@ Solver::Solver(int M_in, int N_in, double T_in)
     // Only internal points
     u.zeros(M-2, M-2);
     tmp.zeros(M-2, M-2);
-    v.ones(M-2, M-2); //Initalise input matrix V with some constant
+    V.ones(M-2, M-2); //Initalise input matrix V with some constant
 }
 
 int Solver::pair_to_single(int i, int j)
@@ -63,7 +63,7 @@ void Solver::fill_matrices()
     for (int i = 0; i < M-2; i++){
         for (int j = 0; j < M-2; j++){
             k = pair_to_single(i, j);
-            std::complex<double> c_a(1.0, 4.0*r.imag() + 0.5*dt*v.at(i,j));
+            std::complex<double> c_a(1.0, 4.0*r.imag() + 0.5*dt*V.at(i,j));
             c_b = std::conj(c_a);
 
             a.at(k) = c_a;
@@ -88,7 +88,6 @@ void Solver::fill_matrices()
     A.diag() = a;
     B.diag() = b;
 }
-
 
 void Solver::set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py)
 {
@@ -141,4 +140,34 @@ void Solver::forward()
     /* arma::cx_vec b = B*u;
     arma::cx_vec x = arma::spsolve(A, b);
     return x; */
+}
+
+void Solver::set_potential(std::string txt_file){
+    V.load(txt_file,arma::raw_ascii);
+
+    //Enforce the boundary conditions. 
+    double v_0=10^10; //High reference value. To be changed...
+    int nrows=V.n_rows;
+    h=1.0/nrows; //Here h is set my the initializing file. Maybe we shouldn't take it as an input to the constructor.
+
+    std::vector<int> x_wall={};
+    std::vector<int> y_wall={};
+
+    for(int i=0;i<nrows;i++){
+        if (0.49<=i*h && i*h<=0.51){
+            x_wall.push_back(i);
+        }
+    }
+ 
+    for(int j=0;j<nrows;j++){
+        if ((0.425<=j*h && j*h<=0.475) || (0.525<=j*h && j*h<=0.575)){
+            y_wall.push_back(j);
+        }
+    }    
+
+    for(int i=0;i<x_wall.size();i++){
+        for(int j=0;j<y_wall.size();i++){
+            V.at(i,j)=v_0;
+        }
+    }
 }
