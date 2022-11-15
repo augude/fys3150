@@ -18,8 +18,8 @@ class Solver
 
         std::complex<double> r;
 
-        arma::cx_vec a((M-2)*(M-2));
-        arma::cx_vec b((M-2)*(M-2));
+        arma::cx_vec a;
+        arma::cx_vec b;
 
         /* Constructor */
         Solver(int M_in, int N_in, double DT)
