@@ -142,11 +142,11 @@ void Solver::forward()
     return x; */
 }
 
-void Solver::set_potential(std::string txt_file){
+void Solver::set_potential(std::string txt_file,double v0){
     V.load(txt_file,arma::raw_ascii);
 
     //Enforce the boundary conditions. 
-    double v_0=10^10; //High reference value. To be changed...
+    double v_0=v0; //High reference value. To be changed...
     int nrows=V.n_rows;
     h=1.0/nrows; //Here h is set my the initializing file. Maybe we shouldn't take it as an input to the constructor.
 

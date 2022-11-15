@@ -38,7 +38,8 @@ class Solver{
         void set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py);
 
         //
-        void set_potential()
+        void set_potential(std::string txt_file,double v0);
+
 
 
 
