@@ -1,10 +1,12 @@
 #include "../include/Solver.hpp"
 
-Solver::Solver(int M_in, int N_in, double DT)
+Solver::Solver(int M_in, int N_in, double T_in)
 {
     M = M_in;
     N = N_in;
-    dt = DT;
+    T = T_in;
+
+    dt = T/(N-1);
     h = 1./(M-1);
     r = std::complex<double>(0, dt/(2*h*h));
 
@@ -29,30 +31,34 @@ int Solver::pair_to_single(int i, int j)
     return j*(M-2) + i;
 }
 
-void Solver::fill_matrices(){
-    //matrices
+void Solver::fill_matrices()
+{
+    // Set size for A and B matrices
     A.zeros((M-2)*(M-2), (M-2)*(M-2));
     B.zeros((M-2)*(M-2), (M-2)*(M-2));
 
-    //submatrices
-    arma::sp_cx_mat subDiag(M-2, M-2); subDiag.zeros();
-    
-    //diagonals
+    // Set size for a and b vectors, for diagonals for A and B
     a.zeros((M-2)*(M-2));
     b.zeros((M-2)*(M-2));
 
-    //The r diagonals
-    arma::cx_vec offDiag((M-2)*(M-3)); offDiag.fill(r);
+    // Initalise and set size for submatrices
+    arma::sp_cx_mat subDiag(M-2, M-2); 
+    subDiag.zeros();
     
-    //Creating subDiag:
-    arma::cx_vec r_vec(M-3); r_vec.fill(r);
-    subDiag.diag(1)=r_vec;
-    subDiag.diag(-1)=r_vec;
+    // Creating r/-r diagonals
+    arma::cx_vec rDiag((M-2)*(M-3)); 
+    rDiag.fill(r);
+    
+    // Filling super/subdiagonals for submatrices with r/-r
+    arma::cx_vec r_vec(M-3); 
+    r_vec.fill(r);
+    subDiag.diag(1) = r_vec;
+    subDiag.diag(-1) = r_vec;
 
+    // Filling diagonal vectors a and b
     arma::cx_double c_b;
     int k;
 
-    //Creating the diagonals. 
     for (int i = 0; i < M-2; i++){
         for (int j = 0; j < M-2; j++){
             k = pair_to_single(i, j);
@@ -67,19 +73,23 @@ void Solver::fill_matrices(){
     std::cout << a << std::endl;
     std::cout << b << std::endl;
 
+    // Inserting r/-r diagonals into A and B
+    A.diag(M-2) = -rDiag;
+    A.diag(2-M) = -rDiag;
+    B.diag(M-2) = rDiag; 
+    B.diag(2-M) = rDiag;
 
-    //Inserting into A and B
-    A.diag(M-2)=-offDiag; A.diag(2-M)=-offDiag;
-    B.diag(M-2)=offDiag; B.diag(2-M)=offDiag;
-
-    for (int i=0;i<M-2;i++){
-        int j=i*(M-2);
-        A.submat(j,j,j+M-3,j+M-3)=-subDiag;
-        B.submat(j,j,j+M-3,j+M-3)=subDiag;
+    // Inserting submatrices into A and B
+    for (int i = 0; i < M-2; i++){
+        int j = i*(M-2);
+        A.submat(j, j, j + M-3, j + M-3) = -subDiag;
+        B.submat(j, j, j + M-3, j + M-3) = subDiag;
     }
 
+    // Inserting a and b vectors as diagonals for A and B
     A.diag() = a;
     B.diag() = b;
+
     std::cout << A << std::endl;
     std::cout << B << std::endl;
 }
