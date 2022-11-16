@@ -68,9 +68,8 @@ int main(int argc, char* argv[]) {
     }
 
     else if (testString == "par") {
-        // 1 runs with a total of 1e7 samples from 2x2 grid with different
-        // number of threads (1 - 4) to find speed-up factor the total number of
-        // samples is distributed evenly across the different threads
+        // 1 run with a total of 1e6 samples from 20x20 grid with different
+        // number of threads (1 - 4) to find speed-up factor 
         double T = 1.0;  // temperature
         int L = 20;
         string filename = "output/test.bin";
