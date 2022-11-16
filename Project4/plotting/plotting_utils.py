@@ -2,6 +2,7 @@ import pyarma as pa
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import tikzplotlib
 
 def binToDf(filename):
     """ returns a pandas dataframe  
@@ -71,7 +72,7 @@ def extract_data(files):
     summary['X'] = chi
     return summary
 
-def scatter_plot(xs, ys, xlabel, ylabel, labels, savefig=False, filename='plot.pdf', height = -0.05):
+def scatter_plot(xs, ys, xlabel, ylabel, title, labels, savefig=False, tikz=False, filename='plot', height = -0.05):
     fig, axs = plt.subplots(1, 1, figsize = (10, 10))
     for index, x in enumerate(xs):
         axs.plot(x, ys[index], linestyle='--')
@@ -79,9 +80,23 @@ def scatter_plot(xs, ys, xlabel, ylabel, labels, savefig=False, filename='plot.p
 
     axs.set_ylabel(ylabel)
     axs.set_xlabel(xlabel)
-    lgd = fig.legend(loc = 'lower center', ncol = len(xs), fancybox = True, 
+    fig.suptitle(title)
+    lgd = fig.legend(loc = 'lower center', ncol = len(xs) // 2, fancybox = True, 
                 bbox_to_anchor = (0.5, height))
     fig.tight_layout()
     plt.show()
     if savefig:
-        fig.savefig(filename, bbox_inches = 'tight')
+        if tikz:
+            tikzplotlib.clean_figure()
+            tikzplotlib.save(
+                f"tex/{filename}.tex",
+                extra_axis_parameters=[
+                    "title style={align=center}",
+                    "xmajorticks=true",
+                    "ymajorticks=true",
+                    "mark options={mark size=2.5pt, line width=1.5pt}",
+                ],
+                strict=True,
+            )
+        else:
+            fig.savefig("figures/" + filename + ".pdf", bbox_inches = 'tight')
