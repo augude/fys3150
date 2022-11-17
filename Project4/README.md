@@ -1,0 +1,15 @@
+## Project 4 - The Ising model 
+
+![image](https://user-images.githubusercontent.com/102254082/202562855-e2876bc5-8928-4cc0-a57f-8b3811df6e8c.png)
+
+To build and run the code for Project 4, write 
+
+``make all``
+in the terminal.
+This will call commands stored in ``makefile``.
+
+The header file ``lattice.hpp`` and the source file ``lattice.cpp`` contain a class for the Ising model. 
+The header file ``mcmc.hpp`` and the source file ``mcmc.cpp`` contain the implementation of the Markov chain Monte Carlo algorithm.
+Header files can be found in ``include`` and source files can be found in ``src``.
+The main-function is build up with a series of functions that are each executed with a command-line argument. 
+The folder ``plotting`` has notebooks for each problem that only serve for plotting purposes. 
