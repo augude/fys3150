@@ -87,6 +87,7 @@ int main(int argc, char* argv[]) {
              << scientificFormat(duration.count()) << endl;
 
     } else if (testString == "problem8") {
+        //samples at different temperaturs to find critical temperature 
         int N = 1e6;                  // number of MC cycles
         const int L = atoi(argv[2]);  // size of lattice
         vec temp = arma::linspace<vec>(2.1, 2.4, 32);
@@ -99,6 +100,7 @@ int main(int argc, char* argv[]) {
     }
 
     else if (testString == "problem8zoom") {
+        //same as above, just zoomed in on the region where the values change most 
         int N = 1e6;                  // number of MC cycles
         const int L = atoi(argv[2]);  // size of lattice
         vec temp = arma::linspace<vec>(2.22, 2.35, 10);
