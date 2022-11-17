@@ -12,4 +12,4 @@ The header file ``lattice.hpp`` and the source file ``lattice.cpp`` contain a cl
 The header file ``mcmc.hpp`` and the source file ``mcmc.cpp`` contain the implementation of the Markov chain Monte Carlo algorithm.
 Header files can be found in ``include`` and source files can be found in ``src``.
 The main-function is build up with a series of functions that are each executed with a command-line argument. 
-The folder ``plotting`` has notebooks for each problem that only serve for plotting purposes. 
+The folder ``plotting`` has notebooks for each problem that only serve plotting purposes. 
