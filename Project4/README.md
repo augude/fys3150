@@ -1,6 +1,6 @@
 ## Project 4 - The Ising model 
-
-![image](https://user-images.githubusercontent.com/102254082/202562855-e2876bc5-8928-4cc0-a57f-8b3811df6e8c.png)
+![image](https://user-images.githubusercontent.com/43797199/202687893-6a2c4188-31c4-4834-9eb0-c314ba46a022.png)
+In a remarkable stroke of luck we came across this microstate in one of our simulations, and thought we would include it as Ising on the cake.
 
 To build and run the code for Project 4, write 
 
