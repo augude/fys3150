@@ -1,9 +1,9 @@
-## Project 4 - The Ising model 
+## <p align = "center">Project 4 - The Ising model </p>
 <p align = "center">
 <img src = "https://user-images.githubusercontent.com/43797199/202687893-6a2c4188-31c4-4834-9eb0-c314ba46a022.png">
 </p>
 <p align = "center">
-</b>In a remarkable stroke of luck we came across this microstate in one of our simulations, and thought we would include it as Ising on the cake.</b>
+</b>In a remarkable stroke of luck we came across this microstate <br>in one of our simulations, and thought we would include it as Ising on the cake.</b>
 </p>
 
 
