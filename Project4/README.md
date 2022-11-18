@@ -8,11 +8,7 @@
 
 
 ### Run code
-To build and run the code for Project 4, write 
-
-``make all``
-in the terminal.
-This will call commands stored in ``makefile``.
+To build and run the code for Project 4, write ``make all`` in the terminal. This will call commands stored in ``makefile``.
 
 ### Code structure
 The header file ``lattice.hpp`` and the source file ``lattice.cpp`` contain a class for the Ising model. 
