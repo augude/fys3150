@@ -1,47 +1,40 @@
 #include "../include/Solver.hpp"
 
-Solver::Solver(int M_in, int N_in, double T_in)
+Solver::Solver(double h_in, double dt_in, double T_in)
 {
-    M = M_in;
-    N = N_in;
+    h = h_in;
+    dt = dt_in;
     T = T_in;
 
-    dt = T/(N-1);
-    h = 1./(M-1);
+    int M = 1./h + 1;
+    int N = 1./dt + 1;
     r = std::complex<double>(0, dt/(2*h*h));
 
-    /* u.zeros(m, m);
-    v.zeros(m, m);
-    int z = 1;
+    // To avoid issues with reshape, used advanced constructor for u vector
+    // Any changes to matrix/vector form affects both
+    U.zeros(M-2, M-2);
+    u = arma::cx_vec(U.memptr(), U.n_elem, false, false);
 
-    // Initalise input matrix V with some constant
-    for (int i = 1; i < m-1; i++){
-        for (int j = 1; j < m-1; j++){
-            v(i, j) = z;
-        }
-    } */
-
-    // Only internal points
-    u.zeros(M-2, M-2);
     tmp.zeros(M-2, M-2);
-    V.ones(M-2, M-2); //Initalise input matrix V with some constant
+    V.zeros(M-2, M-2);
+    states.zeros(M-2, M-2, N);
 }
+
 
 int Solver::pair_to_single(int i, int j)
 {
     return j*(M-2) + i;
 }
 
+
 void Solver::fill_matrices()
 {
-    // Set size for A and B matrices
     A.zeros((M-2)*(M-2), (M-2)*(M-2));
     B.zeros((M-2)*(M-2), (M-2)*(M-2));
 
-    // Set size for a and b vectors, for diagonals for A and B
-    a.zeros((M-2)*(M-2));
-    b.zeros((M-2)*(M-2));
-
+    arma::cx_vec a((M-2)*(M-2), arma::fill::zeros);
+    arma::cx_vec b((M-2)*(M-2), arma::fill::zeros);
+    
     // Initalise and set size for submatrices
     arma::sp_cx_mat subDiag(M-2, M-2); 
     subDiag.zeros();
@@ -89,6 +82,7 @@ void Solver::fill_matrices()
     B.diag() = b;
 }
 
+
 void Solver::set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py)
 {
     double real;
@@ -100,74 +94,70 @@ void Solver::set_initial_state(double xc, double sigx, double px, double yc, dou
             real = -((i*h - xc)*(i*h - xc))/(2*sigx*sigx) - ((j*h - yc)*(j*h - yc))/(2*sigy*sigy);
             imag = px*(i*h - xc) + py*(j*h - yc);
             e = std::complex<double>(real, imag);
-            u.at(i,j) = exp(e);
-        }
-    }
-    
-    /* //Create matrix with boundary conditions
-    arma::cx_mat U;
-    U.zeros(M,M);
-
-    double real;
-    double imag;
-    std::complex<double> e;
-
-    for (int i = 1; i < M-1; i++){
-        for (int j = 1; j < M-1; j++){
-            real = -((i*h - xc)*(i*h - xc))/(2*sigx*sigx) - ((j*h - yc)*(j*h - yc))/(2*sigy*sigy);
-            imag = px*(i*h - xc) + py*(j*h - yc);
-            e = std::complex<double>(real, imag);
-
             U.at(i,j) = exp(e);
-            
         }
     }
 
-    std::cout << U << std::endl;
+    // Normalise
     U = U/arma::accu(U);
-    std::cout << U << std::endl; */
-    
 }
+
 
 void Solver::forward()
 {
     tmp = u;
-    tmp.reshape((M-2)*(M-2), 1); // For matrix multiplication
+    // Tridiag solver ideal
     arma::spsolve(u, A, B*tmp);
-    u.reshape(M-2, M-2); // Revert back to matrix?
-    
-    
-    /* arma::cx_vec b = B*u;
-    arma::cx_vec x = arma::spsolve(A, b);
-    return x; */
 }
 
-void Solver::set_potential(std::string txt_file,double v0){
-    V.load(txt_file,arma::raw_ascii);
 
-    //Enforce the boundary conditions. 
-    double v_0=v0; //High reference value. To be changed...
-    int nrows=V.n_rows;
-    h=1.0/nrows; //Here h is set my the initializing file. Maybe we shouldn't take it as an input to the constructor.
+void Solver::solve()
+{
+    for (int i = 0; i < N; i++){
+        states.slice(i) = U;
+        forward();
+    }
+}
 
-    std::vector<int> x_wall={};
-    std::vector<int> y_wall={};
 
-    for(int i=0;i<nrows;i++){
-        if (0.49<=i*h && i*h<=0.51){
+void Solver::set_potential(std::string filename, double v0)
+{
+    // Check if input is MxM
+    assert(V.n_rows == M && V.n_cols == M);
+    
+    V.load(filename, arma::raw_ascii);
+    std::cout << V << std::endl;
+
+    std::vector<int> x_wall;
+    std::vector<int> y_wall;
+
+    for (int i = 0; i < V.n_rows; i++){
+        if (0.49 <= i*h && i*h <= 0.51){
             x_wall.push_back(i);
         }
     }
  
-    for(int j=0;j<nrows;j++){
-        if ((0.425<=j*h && j*h<=0.475) || (0.525<=j*h && j*h<=0.575)){
+    for (int j = 0; j < V.n_rows; j++){
+        if ((0.425 <= j*h && j*h <= 0.475) || (0.525 <= j*h && j*h <= 0.575)){
             y_wall.push_back(j);
         }
-    }    
+    }  
 
-    for(int i=0;i<x_wall.size();i++){
-        for(int j=0;j<y_wall.size();i++){
-            V.at(i,j)=v_0;
+    for (int i = 0; i < x_wall.size(); i++){
+        for (int j = 0; j < y_wall.size(); j++){
+            V.at(x_wall.at(i), y_wall.at(j)) = v0;
         }
     }
+
 }
+
+void Solver::write_to_file()
+{
+    std::ofstream myfile;
+    myfile.open("t_iterations.txt");
+    for (int i = 0; i < N; i++){
+        myfile << states.slice(i) << std::endl;
+    }
+    myfile.close();
+}
+

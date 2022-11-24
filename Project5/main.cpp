@@ -2,16 +2,12 @@
 
 int main()
 {
-    Solver obj(5, 5, 10);
+    Solver obj(0.005, 2.5e-5, 0.008);
     obj.fill_matrices();
-
-    //Testing forward
-    /* arma::cx_mat u = obj.set_initial_state(0.1, 0.1, 0.1, 0.2, 0.2, 0.2);
-    u.reshape((u.n_rows*u.n_rows), 1);
-    std::cout << obj.forward(u) << std::endl; */
-
-    obj.set_initial_state(0.1, 0.1, 0.1, 0.2, 0.2, 0.2);
-    obj.forward();
+    obj.set_initial_state(0.25, 0.05, 200, 0.5, 0.05, 0);
+    obj.set_potential("potential.txt", 0);
+    obj.solve();
+    obj.write_to_file(); 
 
     return 0;
 }
