@@ -47,6 +47,9 @@ __pychache__
 #txt-files
 *.txt
 
+*.bin
+
+*.dat
 #pdf-files
 # *.pdf
 
