@@ -1,4 +1,7 @@
 #include "../include/Solver.hpp"
+#include "../include/progressbar.hpp"
+using namespace std;
+using namespace arma;
 
 Solver::Solver(double h_in, double dt_in, double T_in)
 {
@@ -6,8 +9,8 @@ Solver::Solver(double h_in, double dt_in, double T_in)
     dt = dt_in;
     T = T_in;
 
-    int M = 1./h + 1;
-    int N = 1./dt + 1;
+    M = 1./h + 1;
+    N = T/dt + 1;
     r = std::complex<double>(0, dt/(2*h*h));
 
     // To avoid issues with reshape, used advanced constructor for u vector
@@ -29,9 +32,9 @@ int Solver::pair_to_single(int i, int j)
 
 void Solver::fill_matrices()
 {
+    cout << "Filling matrices ..." << endl;
     A.zeros((M-2)*(M-2), (M-2)*(M-2));
     B.zeros((M-2)*(M-2), (M-2)*(M-2));
-
     arma::cx_vec a((M-2)*(M-2), arma::fill::zeros);
     arma::cx_vec b((M-2)*(M-2), arma::fill::zeros);
     
@@ -80,6 +83,7 @@ void Solver::fill_matrices()
     // Inserting a and b vectors as diagonals for A and B
     A.diag() = a;
     B.diag() = b;
+    cout << "Done" << endl;
 }
 
 
@@ -98,8 +102,8 @@ void Solver::set_initial_state(double xc, double sigx, double px, double yc, dou
         }
     }
 
-    // Normalise
-    U = U/arma::accu(U);
+    // Elementwise multiplication and normalization
+    U = U/sqrt(arma::accu(arma::conj(U) % U)); 
 }
 
 
@@ -113,51 +117,25 @@ void Solver::forward()
 
 void Solver::solve()
 {
+    cout << "Solving eq ..." << endl;
+    progressbar bar(N);
     for (int i = 0; i < N; i++){
         states.slice(i) = U;
-        forward();
+        forward();        
+        bar.update();
+        //cout << "Done with " << (i*100.0/N) << "% of the steps ..."  << endl;
     }
 }
 
 
-void Solver::set_potential(std::string filename, double v0)
+void Solver::set_potential(std::string filename)
 {
-    // Check if input is MxM
-    assert(V.n_rows == M && V.n_cols == M);
-    
-    V.load(filename, arma::raw_ascii);
-    std::cout << V << std::endl;
-
-    std::vector<int> x_wall;
-    std::vector<int> y_wall;
-
-    for (int i = 0; i < V.n_rows; i++){
-        if (0.49 <= i*h && i*h <= 0.51){
-            x_wall.push_back(i);
-        }
-    }
- 
-    for (int j = 0; j < V.n_rows; j++){
-        if ((0.425 <= j*h && j*h <= 0.475) || (0.525 <= j*h && j*h <= 0.575)){
-            y_wall.push_back(j);
-        }
-    }  
-
-    for (int i = 0; i < x_wall.size(); i++){
-        for (int j = 0; j < y_wall.size(); j++){
-            V.at(x_wall.at(i), y_wall.at(j)) = v0;
-        }
-    }
-
+    cout << "Loading potential ..." << endl;
+   V.load(filename, arma::raw_ascii);
+   bool ok = V.load(filename, arma::raw_ascii);
+   if (ok == false){
+    cout << "Problem with loading file in line: " << __LINE__  << "in file: " << __FILE__ << endl;
+   }
+    assert(V.n_rows == (M - 2) && V.n_cols == (M - 2));
+    cout << "Done" << endl;
 }
-
-void Solver::write_to_file()
-{
-    std::ofstream myfile;
-    myfile.open("t_iterations.txt");
-    for (int i = 0; i < N; i++){
-        myfile << states.slice(i) << std::endl;
-    }
-    myfile.close();
-}
-

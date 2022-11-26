@@ -38,19 +38,17 @@ class Solver{
         // Filling matrices for Crank-Nicholson
         void fill_matrices();
 
+
         // Sets the initial state matrix U
         void set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py);
 
         // Sets the potential matrix V
-        void set_potential(std::string filename, double v0);
+        void set_potential(std::string filename);
 
         // Moves forward one time step
         void forward();
 
         // Solves for all time steps
         void solve();
-
-        // Writes all state matrices 
-        void write_to_file();
 
 };
