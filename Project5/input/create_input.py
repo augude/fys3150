@@ -46,12 +46,20 @@ def write_potential(M, v0, xwall_thickness, xwall_center, aperature, slit_sepera
         for i in range(ind_center - ind_thick, ind_center + ind_thick + 1):
             for j in range(M - 2):
                 pot[i, j] = v0
+    
+    elif type == 'hydrogen':
+        pot = np.zeros(shape = (M - 2, M-2)) 
+        for i in range(M - 2):
+            for j in range(M - 2):
+                r = np.sqrt(((M - 2)//2 - i)**2 + ((M - 2)//2 - j)**2)
+                pot[i, j] = v0/(r + 1e-10)
     else:
-        print('Provide a valid argument. Either "no", "single", "double", "triple" or "tunnel".')
+        print('Provide a valid argument. Either "no", "single", "double", "triple", "tunnel" or "hydrogen".')
         return None 
     if save:
         np.savetxt(f'{type}.dat', pot)
     return pot 
+
 
 h = float(sys.argv[2])
 M = int(1.0/h + 1)
@@ -62,12 +70,24 @@ slit_sep = 0.05
 aperature = 0.05 
 
 typ = str(sys.argv[1])
+
 pot = write_potential(M, v0, thick, center, aperature, slit_sep, type = typ)
 
 if pot is not None:
     print(f'A grid of size {np.shape(pot)} with {typ}-slit barrier is successfully created.')
-    plt.imshow(pot, origin = 'lower')
-    plt.grid()
-
-            
+    fig, axs = plt.subplots(1, 1, figsize = (10, 10))
+    img = axs.imshow(np.transpose(pot), origin = 'lower')
+    axs.grid()
+    cbar = fig.colorbar(img, ax=axs, fraction=0.046, pad=0.04)
+    cbar.set_label('Strength of potential')
+    cbar.ax.tick_params()
+    axs.set_xlabel('x')
+    axs.set_xticklabels([f'{i:.1f}' for i in np.linspace(0, 1, 11)])
+    axs.set_yticklabels([f'{i:.1f}' for i in np.linspace(0, 1, 11)])
+    axs.set_ylabel('y')
+    axs.set_title(f'Potential with {typ}-slit barrier')
+    fig.tight_layout()
+    plt.savefig(f'../output/{typ}_potential.pdf')
+    plt.show()
+        
 # %%

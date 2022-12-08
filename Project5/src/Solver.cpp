@@ -3,11 +3,19 @@
 using namespace std;
 using namespace arma;
 
-Solver::Solver(double h_in, double dt_in, double T_in)
+Solver::Solver(double h_in, double dt_in, double T_in, double xc_in, double sigx_in, double px_in, double yc_in, double sigy_in, double py_in)
 {
     h = h_in;
     dt = dt_in;
     T = T_in;
+
+    xc = xc_in;
+    sigx = sigx_in;
+    px = px_in;
+
+    yc = yc_in;
+    sigy = sigy_in;
+    py = py_in;
 
     M = 1./h + 1;
     N = T/dt + 1;
@@ -87,7 +95,7 @@ void Solver::fill_matrices()
 }
 
 
-void Solver::set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py)
+void Solver::set_initial_state()
 {
     double real;
     double imag;
@@ -115,15 +123,28 @@ void Solver::forward()
 }
 
 
-void Solver::solve()
+void Solver::measure_particle(double x, double y){
+    sigx = sigx/4;
+    sigy = sigy/4;
+    xc = x; 
+    yc = y;
+    set_initial_state();
+}
+
+
+void Solver::solve(bool measure, double measure_time, double x, double y)
 {
+    int measure_index = N*measure_time/T;
     cout << "Solving eq ..." << endl;
     progressbar bar(N);
     for (int i = 0; i < N; i++){
         states.slice(i) = U;
         forward();        
         bar.update();
-        //cout << "Done with " << (i*100.0/N) << "% of the steps ..."  << endl;
+        if (i == measure_index && measure){
+            measure_particle(x, y);
+            cout << " A wild measurement occurred! Your particle is at (" << xc << ", " << yc << ")." << endl;         
+        }
     }
 }
 

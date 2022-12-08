@@ -28,9 +28,16 @@ class Solver{
 
         arma::cx_cube states; // State storage cube
 
+        // initial states values
+        double xc;
+        double sigx;
+        double px;
+        double yc;
+        double sigy;
+        double py;
 
         // Constructor
-        Solver(double h_in, double dt_in, double T_in);
+        Solver(double h_in, double dt_in, double T_in, double xc_in, double sigx_in, double px_in, double yc_in, double sigy_in, double py_in);
 
         // Converting matrix indices to vector index
         int pair_to_single(int i, int j);
@@ -40,7 +47,7 @@ class Solver{
 
 
         // Sets the initial state matrix U
-        void set_initial_state(double xc, double sigx, double px, double yc, double sigy, double py);
+        void set_initial_state();
 
         // Sets the potential matrix V
         void set_potential(std::string filename);
@@ -48,7 +55,10 @@ class Solver{
         // Moves forward one time step
         void forward();
 
-        // Solves for all time steps
-        void solve();
+        // Solves for all time steps with the option of a measurement at measure_time with the result (x, y)
+        void solve(bool measure = false, double measure_time = 0, double x = 0, double y = 0);
+
+        //measures the position of the particle to be (x, y)
+        void measure_particle(double x, double y);
 
 };
