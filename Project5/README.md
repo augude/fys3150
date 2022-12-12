@@ -9,5 +9,5 @@ The output of the simulation is stored in ``bin``-files and can be visualized us
 ### Code structure
 The header file ``Solver.hpp`` and the source file ``Solver.cpp`` contain a class for the Crank-Nicholson solver. 
 Header files can be found in ``include`` and source files can be found in ``src``.
-The folder ``plotting`` has a file with stored function for visualization and a notebook that serve plotting purposes.
+The folder ``plotting`` has a file with stored function for visualization and a notebook for plotting purposes.
 Some animations of the time-evolution can be found in the folder ``output``.
