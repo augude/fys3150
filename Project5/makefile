@@ -1,3 +1,5 @@
+all: noslits doubleslits_long doubleslits_short doubleslits_short_measure singleslit tripleslits
+
 noslits:
 	cd input \
 	&& python3 create_input.py no 5e-3 0 \
