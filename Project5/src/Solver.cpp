@@ -124,8 +124,8 @@ void Solver::forward()
 
 
 void Solver::measure_particle(double x, double y){
-    sigx = sigx/4;
-    sigy = sigy/4;
+    sigx = sigx/6;
+    sigy = sigy/6;
     xc = x; 
     yc = y;
     set_initial_state();
@@ -137,15 +137,25 @@ void Solver::solve(bool measure, double measure_time, double x, double y)
     int measure_index = N*measure_time/T;
     cout << "Solving eq ..." << endl;
     progressbar bar(N);
-    for (int i = 0; i < N; i++){
+    if (measure){ //evolution with measurement
+        for (int i = 0; i < N; i++){
         states.slice(i) = U;
         forward();        
         bar.update();
-        if (i == measure_index && measure){
+        if (i == measure_index){
             measure_particle(x, y);
             cout << " A wild measurement occurred! Your particle is at (" << xc << ", " << yc << ")." << endl;         
         }
     }
+    }
+    else{ //evolution without measurement
+        for (int i = 0; i < N; i++){
+        states.slice(i) = U;
+        forward();        
+        bar.update();
+    }
+    }
+    
 }
 
 

@@ -64,7 +64,7 @@ def create_animation(type):
         return img
 
     # Use matplotlib.animation.FuncAnimation to put it all together
-    anim = FuncAnimation(fig, animation, interval=20, frames=np.arange(0, len(obj[:, 0, 0]), 2), repeat=False, blit=0)
+    anim = FuncAnimation(fig, animation, interval=50, frames=np.arange(0, len(obj[:, 0, 0]), 2), repeat=False, blit=0)
 
     # Run the animation!
     #plt.show()
@@ -89,24 +89,25 @@ def deviating_probability(type, type1, T):
     prob1 = np.array([np.sum(np.absolute(obj1[i, :, :])**2) for i in range(N)])
 
     
-    fig, axs = plt.subplots(1, 2, figsize = (15, 12))
-    axs[0].semilogy(t, np.abs(1 - prob))
+    fig, axs = plt.subplots(1, 2, figsize = (15, 7))
+    axs[0].plot(t, np.abs(1 - prob))
     axs[0].set_xlabel('t')
-    axs[0].set_ylabel(r'$\log(|1 - \sum_{i, j}|u_{i, j}|^2|)$')
-    axs[0].set_title('Deviation from normalized state \n for free particle')
+    axs[0].set_ylabel(r'$|1 - \sum_{i, j}|u_{i, j}|^2|$')
+    axs[0].set_title('Without potential barriers', y = 1.1)
     axs[0].ticklabel_format(axis="x", style="sci", scilimits=(0,0))
     
-    axs[1].semilogy(t, np.abs(1 - prob1))
+    axs[1].plot(t, np.abs(1 - prob1))
     axs[1].set_xlabel('t')
     axs[1].set_ylabel(r'$\log(|1 - \sum_{i, j}|u_{i, j}|^2|)$')
-    axs[1].set_title('Deviation from normalized state \n for particle in double-slit potential')
+    axs[1].set_title('With double-slit barriers', y = 1.1)
     axs[1].ticklabel_format(axis="x", style="sci", scilimits=(0,0))
     
     fig.tight_layout()    
     plt.savefig(f'../output/{type}_{type1}_deviation.pdf', bbox_inches = 'tight')
-    plt.show()        
+    plt.show() 
+       
     
-def measure(type, y, t, T):
+def measure(type, y, t, T, title = None):
     from scipy.signal import argrelextrema
     obj = pa.cx_cube()
     obj.load(f"../output/{type}_evolution.bin")
@@ -122,71 +123,19 @@ def measure(type, y, t, T):
     max_max = argrelextrema(prob, np.greater)
     print(x[max_max])
     fig, axs = plt.subplots(1, 1, figsize = (8, 8))
-    axs.plot(x, prob/np.sum(prob))
+    axs.scatter(x, prob/np.sum(prob))
+    axs.plot(x, prob/np.sum(prob), alpha = 0.5)
     print(np.trapz(prob/np.sum(prob)))
     axs.set_xlabel('y')
     axs.set_ylabel(f'$p(y|x = {y:.2f}; t = {t})$')
-    fig.suptitle(f'Detection probability \n after passing {type}-slit barrier')
+    if title is not None:
+        fig.suptitle(f'{title}')
+    else:
+        fig.suptitle(f'Detection probability \n after passing {type}-slit barrier')
     fig.tight_layout()    
     plt.savefig(f'../output/{type}_detection.pdf', bbox_inches = 'tight')
     plt.show()
     
-    
-
-    
-
-def animate_prob(type, y, T):
-    obj = pa.cx_cube()
-    obj.load(f"../output/{type}_evolution.bin")
-    obj = np.array(obj)
-
-    h = 0.005
-    M = len(obj[0, 0, :])
-    y_ind = int(y*M)
-    x_points = np.linspace(0, 1, M)
-
-    # Array of time points
-    dt = 2.5e-5
-    N = int(T/dt)
-    t_points = np.arange(0, T, dt)
-
-    # Some settings
-    fontsize = 12
-    t_min = t_points[0]
-    
-    # Create figure
-    
-    # Create a colour scale normalization according to the max z value in the first frame
-    # Plot the first frame
-    norm = np.sum(np.absolute(obj[0, y_ind, :]**2))
-    #plt.plot(x_points, np.absolute(obj[0, y_ind, :]**2)/norm)
-    
-    img = plt.plot(x_points, np.absolute(obj[0, y_ind, :]**2)/norm) 
-
-    # Axis labels
-    plt.xlabel("x", fontsize=fontsize)
-    plt.ylabel("Probability", fontsize=fontsize)
-    plt.xticks(fontsize=fontsize)
-    plt.yticks(fontsize=fontsize)
-    plt.ylim([-0.005, 0.1])
-    plt.xlim([0, 1])
-
-    # Function that takes care of updating the z data and other things for each frame
-    def animation(i):
-        # Normalize the colour scale to the current frame?
-        
-        # Update z data
-        t_ind = int(i*N/T)
-        norm = np.sum(np.absolute(obj[t_ind, y_ind, :])**2)
-        img[0].set_ydata(np.absolute(obj[t_ind, y_ind, :])**2/norm) #, extent=[x_min,x_max,y_min,y_max])
-
-        return img
-
-    # Use matplotlib.animation.FuncAnimation to put it all together
-    anim = FuncAnimation(plt.gcf(), animation, interval=5, frames=t_points)
-    
-    anim.save(f'./{type}_prob.gif', writer="Pillow", bitrate=-1, fps=30)
-
 def evolution(type, T, plotstyle):
     func = {'abs': lambda x: np.absolute(x)**2, 'real': lambda x: np.real(x), 'imag': lambda x: np.imag(x)}
     name = {'abs': 'Probability', 'real': 'Real part', 'imag': 'Imaginary part'}
@@ -197,8 +146,6 @@ def evolution(type, T, plotstyle):
     h = 0.005
     x_points = np.arange(0, 1+h, h)
     y_points = np.arange(0, 1+h, h)
-
-    fontsize = 12
     
     x_min, x_max = x_points[0], x_points[-1]
     y_min, y_max = y_points[0], y_points[-1]
@@ -220,8 +167,8 @@ def evolution(type, T, plotstyle):
         axs[index].set_ylabel('y')
     
         # Add a colourbar
-        cbar = fig.colorbar(img, ax=axs[index], fraction=0.046, pad=0.04)
-        cbar.set_label(name[plotstyle])
+        cbar = fig.colorbar(img, ax=axs[index], fraction=0.046, pad=0.02, format = '%.0e')
+        cbar.set_label(name[plotstyle], rotation = -90)
         cbar.ax.tick_params()
     fig.suptitle(r'Evolution of $u(x, y)$ at different points in time')
     fig.tight_layout()
